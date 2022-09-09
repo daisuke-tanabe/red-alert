@@ -1,11 +1,18 @@
+# project
+dist
+
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
 
 # misc
 .DS_Store
 *.pem
+
+# packageManager
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*
 
 # debug
 npm-debug.log*
