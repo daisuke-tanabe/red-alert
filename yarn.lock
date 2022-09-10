@@ -520,7 +520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.10.3":
+"@mui/utils@npm:^5.10.3, @mui/utils@npm:^5.9.3":
   version: 5.10.3
   resolution: "@mui/utils@npm:5.10.3"
   dependencies:
@@ -532,6 +532,24 @@ __metadata:
   peerDependencies:
     react: ^17.0.0 || ^18.0.0
   checksum: 055e26797d66fd064582b00440eb53ef6c4b49764778e30a3f3537f17d272232a3b601b59b10a29fe742731bf4e0fa3a32a97c5cc633c1d9c4144b667e015da8
+  languageName: node
+  linkType: hard
+
+"@mui/x-data-grid@npm:^5.17.2":
+  version: 5.17.2
+  resolution: "@mui/x-data-grid@npm:5.17.2"
+  dependencies:
+    "@babel/runtime": "npm:^7.18.9"
+    "@mui/utils": "npm:^5.9.3"
+    clsx: "npm:^1.2.1"
+    prop-types: "npm:^15.8.1"
+    reselect: "npm:^4.1.6"
+  peerDependencies:
+    "@mui/material": ^5.4.1
+    "@mui/system": ^5.4.1
+    react: ^17.0.2 || ^18.0.0
+    react-dom: ^17.0.2 || ^18.0.0
+  checksum: 5be26598bdd07c94e1a565e40801ad5a83049c9175dc8a70467741141744d570f94156bad3ba15e3c87535960cde0312ceea16e3dfac79d20cf12647309b11db
   languageName: node
   linkType: hard
 
@@ -4623,6 +4641,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"reselect@npm:^4.1.6":
+  version: 4.1.6
+  resolution: "reselect@npm:4.1.6"
+  checksum: dee09874278bb662102b7bd36e5331bc3ac72125940c03804c4506eed0ac08334ea6e63cd9bcaa1d3c603575f3449d1e6d1ba2e6ad2ff4eeb5385334fa8fccfc
+  languageName: node
+  linkType: hard
+
 "resolve-cwd@npm:^3.0.0":
   version: 3.0.0
   resolution: "resolve-cwd@npm:3.0.0"
@@ -4755,6 +4780,7 @@ __metadata:
     "@emotion/styled": "npm:^11.10.4"
     "@mui/icons-material": "npm:^5.10.3"
     "@mui/material": "npm:^5.10.4"
+    "@mui/x-data-grid": "npm:^5.17.2"
     "@types/react": "npm:^18.0.18"
     "@types/react-dom": "npm:^18.0.6"
     "@typescript-eslint/eslint-plugin": "npm:^5.36.2"
