@@ -7,6 +7,7 @@ import { Box, Stack, Tab, Tabs } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import avatarImage from '../../assets/images/avatar.jpg';
 
 const Header = () => {
   const theme = useTheme();
@@ -25,7 +26,7 @@ const Header = () => {
             <NotificationsIcon sx={{ fontSize: '24px' }} />
           </IconButton>
           <IconButton>
-            <Avatar src="/avatar.jpg" sx={{ width: '32px', height: '32px' }} />
+            <Avatar src={avatarImage} sx={{ width: '32px', height: '32px' }} />
           </IconButton>
         </Toolbar>
 

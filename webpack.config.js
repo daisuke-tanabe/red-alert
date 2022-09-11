@@ -1,22 +1,57 @@
 const path = require('path');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 const mode = process.env.NODE_ENV;
+const distPath = path.join(__dirname, 'dist');
 
 module.exports = {
   mode,
-  entry: './src/app.tsx',
+  entry: {
+    app: './src/app.tsx',
+  },
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'app.js'
+    path: distPath,
+    filename: '[name].js',
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader'
-      }
-    ]
+        use: 'ts-loader',
+      },
+      // TODO base64の対象にするか閾値は後で調整する
+      // https://webpack.js.org/guides/asset-modules/
+      {
+        test: /\.(jpe?g|png|webp)$/i,
+        type: 'asset',
+        generator: {
+          filename: 'assets/images/[name][ext]',
+        },
+      },
+    ],
+  },
+  optimization: {
+    minimizer: [
+      new ImageMinimizerPlugin({
+        minimizer: {
+          implementation: ImageMinimizerPlugin.sharpMinify,
+          options: {
+            encodeOptions: {
+              jpg: {
+                quality: 70,
+              },
+              png: {
+                quality: 70,
+              },
+              webp: {
+                quality: 70,
+              },
+            },
+          },
+        },
+      }),
+    ],
   },
   devtool: 'eval-source-map',
   devServer: {
@@ -30,13 +65,13 @@ module.exports = {
     }
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json']
+    extensions: ['.ts', '.tsx', '.js', '.json'],
   },
   plugins: [
-    new ESLintPlugin(({
+    new ESLintPlugin({
       extensions: ['.ts', '.tsx', '.js'],
-      exclude: 'node_modules'
-    }))
+      exclude: 'node_modules',
+    }),
   ],
   target: 'web',
 };

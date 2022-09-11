@@ -12,6 +12,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Divider, useMediaQuery } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '../organisms/Header';
+import LogoImage from '../../assets/images/logo.webp';
 
 const columns = [
   // {
@@ -298,7 +299,7 @@ const Front = () => {
             height: '62px',
           }}
         >
-          <img src="/public/logo.png" width="24px" height="24px" />
+          <img src={LogoImage} width="24px" height="24px" />
           <div
             css={{
               fontWeight: 'bold',
