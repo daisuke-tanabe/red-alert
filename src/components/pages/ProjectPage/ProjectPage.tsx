@@ -1,8 +1,6 @@
 import React from 'react';
-import Grid from '@mui/material/Unstable_Grid2';
 import { DataGrid } from '@mui/x-data-grid';
-import Header from '../organisms/Header';
-import Sidebar from '../organisms/Sidebar/Sidebar';
+import BaseLayout from '../../templates/BasetLayout/BaseLayout';
 
 const columns = [
   // {
@@ -225,80 +223,64 @@ const rows = [
   },
 ];
 
-const Front = () => {
+const ProjectPage = () => {
   return (
-    <Grid container>
-      <Sidebar />
+    <BaseLayout>
+      <div style={{ flexGrow: 1, height: '836px' }}>
+        <DataGrid
+          css={{
+            border: 0,
+            // backgroundColor: 'white',
+            // boxShadow:
+            //   '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
+            '.MuiDataGrid-columnHeaders': {
+              border: 0,
+            },
+            '.MuiDataGrid-columnHeader:focus': {
+              outline: 0,
+            },
+            '.MuiDataGrid-columnHeaderTitle': {
+              color: '#6C6E6E',
+              fontSize: '16px',
+            },
+            '.MuiDataGrid-cell': {
+              border: 0,
+              background: '#fff',
+              padding: '0 20px',
+            },
+            '& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight) > .MuiDataGrid-cell': {
+              whiteSpace: 'inherit',
+            },
+            '.MuiDataGrid-cellContent': {
+              fontSize: '13px',
+              display: '-webkit-box',
+              '-webkit-line-clamp': '2',
+              '-webkit-box-orient': 'vertical',
+              overflow: 'hidden',
+              lineHeight: 1.8,
+            },
+            '.MuiDataGrid-columnSeparator': {
+              display: 'none',
+            },
+          }}
+          rows={rows}
+          columns={columns}
+          headerHeight={40}
+          rowHeight={64}
+          pageSize={20}
+          density="comfortable"
+          getRowSpacing={(params) => {
+            const isCurrentLast = params.indexRelativeToCurrentPage === 19;
 
-      <Grid
-        css={{
-          flex: 1,
-          // background: '#f6f7f9'
-          // background: '#F4F8F9',
-        }}
-      >
-        <main>
-          <Header />
-
-          <div style={{ display: 'flex', padding: '40px' }}>
-            <div style={{ flexGrow: 1, height: '836px' }}>
-              <DataGrid
-                css={{
-                  border: 0,
-                  // backgroundColor: 'white',
-                  // boxShadow:
-                  //   '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
-                  '.MuiDataGrid-columnHeaders': {
-                    border: 0,
-                  },
-                  '.MuiDataGrid-columnHeader:focus': {
-                    outline: 0,
-                  },
-                  '.MuiDataGrid-columnHeaderTitle': {
-                    color: '#6C6E6E',
-                    fontSize: '16px',
-                  },
-                  '.MuiDataGrid-cell': {
-                    border: 0,
-                    background: '#fff',
-                    padding: '0 20px',
-                  },
-                  '& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight) > .MuiDataGrid-cell': {
-                    whiteSpace: 'inherit',
-                  },
-                  '.MuiDataGrid-cellContent': {
-                    fontSize: '13px',
-                    display: '-webkit-box',
-                    '-webkit-line-clamp': '2',
-                    '-webkit-box-orient': 'vertical',
-                    overflow: 'hidden',
-                    lineHeight: 1.8,
-                  },
-                  '.MuiDataGrid-columnSeparator': {
-                    display: 'none',
-                  },
-                }}
-                rows={rows}
-                columns={columns}
-                headerHeight={40}
-                rowHeight={64}
-                pageSize={20}
-                density="comfortable"
-                getRowSpacing={(params) => {
-                  const isCurrentLast = params.indexRelativeToCurrentPage === 19;
-
-                  return {
-                    top: 4,
-                    bottom: isCurrentLast ? 0 : 4,
-                  };
-                }}
-              />
-            </div>
-          </div>
-        </main>
-      </Grid>
-    </Grid>
+            return {
+              top: 4,
+              bottom: isCurrentLast ? 0 : 4,
+            };
+          }}
+        />
+      </div>
+    </BaseLayout>
   );
 };
 
-export default Front;
+export default ProjectPage;

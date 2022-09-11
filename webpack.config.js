@@ -1,9 +1,12 @@
 const path = require('path');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const dotenv = require('dotenv')
+const webpack = require("webpack");
 
 const mode = process.env.NODE_ENV;
 const distPath = path.join(__dirname, 'dist');
+const env = dotenv.config().parsed;
 
 module.exports = {
   mode,
@@ -71,6 +74,9 @@ module.exports = {
     new ESLintPlugin({
       extensions: ['.ts', '.tsx', '.js'],
       exclude: 'node_modules',
+    }),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(env),
     }),
   ],
   target: 'web',
