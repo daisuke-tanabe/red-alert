@@ -11,7 +11,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Divider, useMediaQuery } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import Header from './Header';
+import Header from '../organisms/Header';
 
 const columns = [
   // {
@@ -267,7 +267,7 @@ const createTextStyle = (isMdAndOver: boolean) => ({
   opacity: isMdAndOver ? 1 : 0,
 });
 
-const App = () => {
+const Front = () => {
   const theme = useTheme();
   const isMdAndOver = useMediaQuery(theme.breakpoints.up('md'));
   const drawerStyle = createDrawerStyle(theme, isMdAndOver);
@@ -298,7 +298,7 @@ const App = () => {
             height: '62px',
           }}
         >
-          <img src="/logo.png" width="24px" height="24px" />
+          <img src="/public/logo.png" width="24px" height="24px" />
           <div
             css={{
               fontWeight: 'bold',
@@ -422,4 +422,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Front;

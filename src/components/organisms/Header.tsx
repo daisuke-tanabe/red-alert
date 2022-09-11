@@ -1,12 +1,10 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { Box, Container, Stack, Tab, Tabs } from '@mui/material';
-import { Theme, useTheme } from '@mui/material/styles';
+import { Box, Stack, Tab, Tabs } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 

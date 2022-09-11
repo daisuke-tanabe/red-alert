@@ -1,9 +1,9 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
+import Front from './components/pages/Front';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
-import { CacheProvider, css } from '@emotion/react';
+import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import theme from '../src/theme';
 import GlobalStyles from '@mui/material/GlobalStyles';
@@ -66,7 +66,7 @@ root.render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <GlobalStyle />
-      <App />
+      <Front />
     </ThemeProvider>
   </CacheProvider>,
 );

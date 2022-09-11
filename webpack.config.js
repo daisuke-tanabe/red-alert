@@ -5,10 +5,10 @@ const mode = process.env.NODE_ENV;
 
 module.exports = {
   mode,
-  entry: './src/index.tsx',
+  entry: './src/app.tsx',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'index.js'
+    filename: 'app.js'
   },
   module: {
     rules: [
