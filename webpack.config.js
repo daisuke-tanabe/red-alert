@@ -21,6 +21,13 @@ module.exports = {
   devtool: 'eval-source-map',
   devServer: {
     port: 3000,
+    historyApiFallback: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      }
+    }
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json']
