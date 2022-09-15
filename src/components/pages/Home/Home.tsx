@@ -13,6 +13,8 @@ const Main = styled.div`
 const Home = () => {
   const { user, signOut, auth } = useContext(AuthContext);
   const navigate = useNavigate();
+  const userPhoto = user && user.photoURL ? user.photoURL.replace('normal', 'bigger') : '';
+  const headerProps = { userPhoto };
 
   const handleSignOut = () => {
     signOut(auth).then(() => {
@@ -25,7 +27,7 @@ const Home = () => {
     <>
       {user ? (
         <>
-          <Header />
+          <Header {...headerProps} />
           <Main>
             <div>{user.email}</div>
             <div>

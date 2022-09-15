@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import styled from '@emotion/styled';
-import Header from '../../organisms/Header/Header';
 
 const Main = styled.div`
   display: flex;
@@ -15,7 +14,6 @@ const BaseLayout = (props: BaseLayoutProps) => {
 
   return (
     <Box>
-      <Header />
       <Main>{children}</Main>
     </Box>
   );
