@@ -1192,7 +1192,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-jsx@npm:^7.12.12, @babel/plugin-transform-react-jsx@npm:^7.18.6":
+"@babel/plugin-transform-react-jsx@npm:^7.12.12, @babel/plugin-transform-react-jsx@npm:^7.17.12, @babel/plugin-transform-react-jsx@npm:^7.18.6":
   version: 7.19.0
   resolution: "@babel/plugin-transform-react-jsx@npm:7.19.0"
   dependencies:
@@ -1664,6 +1664,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emotion/babel-plugin-jsx-pragmatic@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@emotion/babel-plugin-jsx-pragmatic@npm:0.2.0"
+  dependencies:
+    "@babel/plugin-syntax-jsx": "npm:^7.17.12"
+  peerDependencies:
+    "@babel/core": ^7.0.0
+  checksum: d5bad9d6d25368497387890faa8c8592667b5c2a4c42d19dc903cd8fe554169d2a306155449fb617775e9f62396c7d617d1cd62065decb6dc3f9fa6eda8f80a8
+  languageName: node
+  linkType: hard
+
 "@emotion/babel-plugin@npm:^11.10.0":
   version: 11.10.2
   resolution: "@emotion/babel-plugin@npm:11.10.2"
@@ -1683,6 +1694,20 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0
   checksum: 7691c2431b711b002f77fa2b13781bd9aeac40bf397205d5e64c6071516bb7f2a2e71efe1a3d45b8f199d5ab9b0af9809ec30afa1c6bafa9285500722ff4ca24
+  languageName: node
+  linkType: hard
+
+"@emotion/babel-preset-css-prop@npm:^11.10.0":
+  version: 11.10.0
+  resolution: "@emotion/babel-preset-css-prop@npm:11.10.0"
+  dependencies:
+    "@babel/plugin-transform-react-jsx": "npm:^7.17.12"
+    "@babel/runtime": "npm:^7.18.3"
+    "@emotion/babel-plugin": "npm:^11.10.0"
+    "@emotion/babel-plugin-jsx-pragmatic": "npm:^0.2.0"
+  peerDependencies:
+    "@babel/core": ^7.0.0
+  checksum: 4f43a66d5c876ac7caef9ebc3e70d23dae46eb4ec5afee9fad6a834a9908ef1732db0960fe343b990ea6716000a7701fc5b043794959fdc13ee9fafffe1ef744
   languageName: node
   linkType: hard
 
@@ -7648,6 +7673,15 @@ __metadata:
   bin:
     eslint-config-prettier: bin/cli.js
   checksum: fb61fae9c1ac23afddf046c17437c464ce74d16d86ca1e0ee0705a8c0b89c89baf24420451ae0eafd2789e06de21540b99ca2a8ebae13bcd862c02733df2c160
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-react-hooks@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "eslint-plugin-react-hooks@npm:4.6.0"
+  peerDependencies:
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+  checksum: 7a7df60fd4f2d39bc4b7baaeb0868382454e38d7fe631a0f71c8e6241ca57a1ec258cfef4b05d3cda72c20e5e8d33afebe4dafa9a8a112f05cd5c006091fb083
   languageName: node
   linkType: hard
 
@@ -13660,6 +13694,7 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@babel/core": "npm:^7.19.0"
+    "@emotion/babel-preset-css-prop": "npm:^11.10.0"
     "@emotion/react": "npm:^11.10.4"
     "@emotion/styled": "npm:^11.10.4"
     "@mdx-js/react": "npm:^1.6.22"
@@ -13685,6 +13720,7 @@ __metadata:
     eslint: "npm:^8.23.0"
     eslint-config-prettier: "npm:^8.5.0"
     eslint-plugin-react: "npm:^7.31.8"
+    eslint-plugin-react-hooks: "npm:^4.6.0"
     eslint-plugin-storybook: "npm:^0.6.4"
     eslint-webpack-plugin: "npm:^3.2.0"
     husky: "npm:^8.0.1"

@@ -1,6 +1,8 @@
-import { ThemeProvider } from '@mui/material';
+import React from "react";
 import { Story } from '@storybook/react';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from '../src/theme';
+import GlobalStyle from '../src/GlobalStyle';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -15,6 +17,8 @@ export const parameters = {
 export const decorators = [
   (Story: Story) => (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <GlobalStyle />
       <Story />
     </ThemeProvider>
   ),
