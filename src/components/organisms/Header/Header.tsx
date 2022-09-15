@@ -3,7 +3,6 @@ import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Avatar, Box, Stack, Tab, Tabs, Toolbar, IconButton } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import avatarImage from '../../../assets/images/avatar.jpg';
 
 const Header = () => {
@@ -18,9 +17,6 @@ const Header = () => {
           gap: '0 12px',
         }}
       >
-        <IconButton sx={{ padding: '12px' }}>
-          <NotificationsIcon sx={{ fontSize: '24px' }} />
-        </IconButton>
         <IconButton>
           <Avatar src={avatarImage} sx={{ width: '32px', height: '32px' }} />
         </IconButton>
