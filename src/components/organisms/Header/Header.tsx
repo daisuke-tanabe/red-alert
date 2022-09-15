@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Avatar, Box, Stack, Tab, Tabs, Toolbar, IconButton } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import avatarImage from '../../../assets/images/avatar.jpg';
+import PersonIcon from '@mui/icons-material/Person';
+import { AuthContext } from '../../../provider/AuthProvider';
 
 const Header = () => {
+  const { user } = useContext(AuthContext);
   const theme = useTheme();
+
+  const photoURL = user && user.photoURL ? user.photoURL.replace('normal', 'bigger') : '';
 
   return (
     <Stack>
@@ -18,7 +22,9 @@ const Header = () => {
         }}
       >
         <IconButton>
-          <Avatar src={avatarImage} sx={{ width: '32px', height: '32px' }} />
+          <Avatar src={photoURL} sx={{ width: '32px', height: '32px' }}>
+            <PersonIcon />
+          </Avatar>
         </IconButton>
       </Toolbar>
 
