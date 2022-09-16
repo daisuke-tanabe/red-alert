@@ -1,4 +1,7 @@
 import React, { useContext, useState } from 'react';
+import { Link as RouterLink, Navigate } from 'react-router-dom';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   AppBar,
   FormControl,
@@ -10,13 +13,10 @@ import {
   TextField,
   Toolbar,
 } from '@mui/material';
-import LogoImage from '../../../assets/images/logo.webp';
-import Grid2 from '@mui/material/Unstable_Grid2';
-import Paper from '@mui/material/Paper';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Visibility from '@mui/icons-material/Visibility';
 import Button from '@mui/material/Button';
-import { Link as RouterLink, Navigate } from 'react-router-dom';
+import Paper from '@mui/material/Paper';
+import Grid2 from '@mui/material/Unstable_Grid2';
+import LogoImage from '../../../assets/images/logo.webp';
 import { AuthContext } from '../../../provider/AuthProvider';
 
 type State = {

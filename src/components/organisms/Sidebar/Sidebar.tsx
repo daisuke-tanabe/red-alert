@@ -1,9 +1,10 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { useMediaQuery, Divider, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { useMediaQuery, Divider, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import LogoImage from '../../../assets/images/logo.webp';
 import {
   sidebarStyles,
   sidebarHeadStyle,
@@ -14,7 +15,6 @@ import {
   listItemIconSome,
   dividerStyle,
 } from './SidebarStyles';
-import LogoImage from '../../../assets/images/logo.webp';
 
 const Sidebar = () => {
   const theme = useTheme();

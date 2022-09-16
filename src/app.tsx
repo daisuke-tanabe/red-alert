@@ -1,10 +1,10 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
 import theme from '../src/theme';
 import GlobalStyle from './GlobalStyle';
 import Home from './components/pages/Home/Home';

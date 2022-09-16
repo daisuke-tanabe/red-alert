@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useState, ReactNode } from 'react';
 import { getAuth, signOut as firebaseSignOut, onAuthStateChanged, type User, Auth } from 'firebase/auth';
 import { app } from '../../firebase.config';
-import signUp from '../lib/auth/signUp';
 import signIn from '../lib/auth/signIn';
 import signOut from '../lib/auth/signOut';
+import signUp from '../lib/auth/signUp';
 
 export type AuthProviderProps = {
   children: ReactNode;

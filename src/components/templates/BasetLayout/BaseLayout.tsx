@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box } from '@mui/material';
 import styled from '@emotion/styled';
+import { Box } from '@mui/material';
 
 const Main = styled.div`
   display: flex;

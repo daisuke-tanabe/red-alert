@@ -1,4 +1,7 @@
 import React, { useContext, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Container,
   FormControl,
@@ -9,13 +12,10 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import LogoImage from '../../../assets/images/logo.webp';
-import Paper from '@mui/material/Paper';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Visibility from '@mui/icons-material/Visibility';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import LogoImage from '../../../assets/images/logo.webp';
 import { AuthContext } from '../../../provider/AuthProvider';
-import { Navigate } from 'react-router-dom';
 import FullLayout from '../../templates/FullLayout/FullLayout';
 
 type State = {
