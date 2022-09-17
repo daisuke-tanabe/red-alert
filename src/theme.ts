@@ -39,6 +39,15 @@ const theme = createTheme({
     },
   },
   typography: {
+    fontFamily: [
+      'Helvetica Neue',
+      'Arial',
+      'Hiragino Kaku Gothic ProN',
+      'Hiragino Sans',
+      'BIZ UDPGothic',
+      'Meiryo',
+      'sans-serif',
+    ].join(','),
     siteName: {
       color: '#fff',
       fontSize: '1.25rem',
