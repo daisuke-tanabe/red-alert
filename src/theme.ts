@@ -22,6 +22,12 @@ const theme = createTheme({
       black: '#222',
       white: '#fff',
     },
+    background: {
+      default: '#F6F7F9',
+    },
+    text: {
+      primary: '#222',
+    },
     primary: {
       main: '#ad0a30',
       light: '#f45161',

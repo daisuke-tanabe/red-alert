@@ -32,7 +32,7 @@ const Header = (props: HeaderProps) => {
   };
 
   return (
-    <Paper sx={{ background: theme.palette.primary.main, height: '300px' }} square elevation={0}>
+    <Paper sx={{ background: theme.palette.primary.main, height: '200px' }} square elevation={0}>
       <Toolbar variant="dense" disableGutters sx={{ px: 3 }}>
         <ButtonBase href="#dummyURL">
           <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
