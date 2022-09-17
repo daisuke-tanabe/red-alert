@@ -6,7 +6,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { createRoot } from 'react-dom/client';
 import theme from '../src/theme';
-import GlobalStyle from './GlobalStyle';
 import Home from './components/pages/Home/Home';
 import Login from './components/pages/Login/Login';
 import ProjectPage from './components/pages/ProjectPage/ProjectPage';
@@ -23,7 +22,6 @@ root.render(
   <CacheProvider value={emotionCache}>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <GlobalStyle />
       <AuthProvider>
         <BrowserRouter>
           <Routes>

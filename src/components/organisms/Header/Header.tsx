@@ -1,77 +1,76 @@
-import React from 'react';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
-import { Avatar, Box, Stack, Tab, Tabs, Toolbar, IconButton } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Avatar, Box, Toolbar, IconButton, ButtonBase, Typography, Stack, MenuItem, Paper, Menu } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { AuthContext } from '../../../provider/AuthProvider';
 
 type HeaderProps = {
   userPhoto: string;
 };
 
 const Header = (props: HeaderProps) => {
-  const theme = useTheme();
   const { userPhoto } = props;
+  const { auth, signOut } = useContext(AuthContext);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const theme = useTheme();
+  const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleSignOut = () => {
+    signOut(auth).then(() => {
+      navigate('/login', { replace: true });
+    });
+    setAnchorEl(null);
+  };
 
   return (
-    <Stack>
-      <Toolbar
-        css={{
-          height: '62px',
-          justifyContent: 'end',
-          gap: '0 12px',
-        }}
-      >
-        <IconButton>
-          <Avatar src={userPhoto} sx={{ width: '32px', height: '32px' }}>
-            <PersonIcon />
+    <Paper sx={{ background: theme.palette.primary.main, height: '300px' }} square elevation={0}>
+      <Toolbar variant="dense" disableGutters sx={{ px: 3 }}>
+        <ButtonBase href="#dummyURL">
+          <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+            <div css={{ background: 'lightgray', borderRadius: '50%', width: '24px', height: '24px' }} />
+            <Typography variant="siteName">Red Alert</Typography>
+          </Stack>
+        </ButtonBase>
+        <Box sx={{ flexGrow: 1 }} />
+        <IconButton onClick={handleMenu}>
+          <Avatar src={userPhoto} sx={{ width: '28px', height: '28px' }}>
+            <PersonIcon sx={{ width: '20px', height: '20px' }} />
           </Avatar>
         </IconButton>
-      </Toolbar>
-
-      <Toolbar>
-        <Grid css={{ marginBottom: '24px' }}>
-          <Grid>
-            <div
-              css={{
-                fontSize: '32px',
-                fontWeight: 'bold',
-              }}
-            >
-              Write website name here.
-            </div>
-            <Stack
-              direction="row"
-              css={{
-                alignItems: 'center',
-                color: theme.palette.grey['500'],
-                fontSize: '14px',
-              }}
-            >
-              <OpenInNewIcon
-                css={{
-                  fontSize: '16px',
-                  marginRight: '4px',
-                }}
-              />
-              <span>https://developer.mozilla.org/en-US/docs/Web/JavaScript</span>
-            </Stack>
-          </Grid>
-        </Grid>
-      </Toolbar>
-      <Box css={{ padding: '0 24px' }}>
-        <Tabs
-          value={0}
-          indicatorColor="primary"
-          css={{
-            borderBottom: '1px solid',
-            borderColor: '#d2ccce',
+        <Menu
+          anchorEl={anchorEl}
+          keepMounted
+          anchorOrigin={{
+            horizontal: 'right',
+            vertical: 'bottom',
           }}
+          transformOrigin={{
+            horizontal: 'right',
+            vertical: 'top',
+          }}
+          open={open}
+          onClose={handleClose}
         >
-          <Tab label="History" />
-        </Tabs>
-      </Box>
-    </Stack>
+          <MenuItem onClick={handleClose}>
+            <PersonIcon sx={{ fontSize: '1rem', marginRight: 1.5 }} />
+            Profile
+          </MenuItem>
+          <MenuItem onClick={handleSignOut}>
+            <LogoutIcon sx={{ fontSize: '1rem', marginRight: 1.5 }} />
+            Logout
+          </MenuItem>
+        </Menu>
+      </Toolbar>
+    </Paper>
   );
 };
 

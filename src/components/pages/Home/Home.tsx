@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import Button from '@mui/material/Button';
 import { AuthContext } from '../../../provider/AuthProvider';
 import Header from '../../organisms/Header/Header';
 
@@ -11,17 +10,9 @@ const Main = styled.div`
 `;
 
 const Home = () => {
-  const { user, signOut, auth } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const userPhoto = user && user.photoURL ? user.photoURL.replace('normal', 'bigger') : '';
   const headerProps = { userPhoto };
-
-  const handleSignOut = () => {
-    signOut(auth).then(() => {
-      console.log('sign out!!');
-      navigate('/login', { replace: true });
-    });
-  };
 
   return (
     <>
@@ -30,9 +21,6 @@ const Home = () => {
           <Header {...headerProps} />
           <Main>
             <div>{user.email}</div>
-            <div>
-              <Button onClick={handleSignOut}>Sign Out</Button>
-            </div>
           </Main>
         </>
       ) : (

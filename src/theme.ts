@@ -1,4 +1,22 @@
+import React from 'react';
 import { createTheme } from '@mui/material/styles';
+
+declare module '@mui/material/styles' {
+  interface TypographyVariants {
+    siteName: React.CSSProperties;
+    regular: React.CSSProperties;
+  }
+  interface TypographyVariantsOptions {
+    siteName?: React.CSSProperties;
+    regular?: React.CSSProperties;
+  }
+}
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    siteName: true;
+    regular: true;
+  }
+}
 
 const theme = createTheme({
   // https://mui.com/material-ui/customization/default-theme/?expand-path=$.palette
@@ -18,6 +36,16 @@ const theme = createTheme({
       light: '#ffd15c',
       dark: '#b77100',
       contrastText: '#222',
+    },
+  },
+  typography: {
+    siteName: {
+      color: '#fff',
+      fontSize: '1.25rem',
+      fontWeight: 'bold',
+    },
+    body1: {
+      fontSize: '0.875rem',
     },
   },
 });
