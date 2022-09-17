@@ -28,17 +28,17 @@ const AuthContext = createContext(defaultValue);
 const AuthProvider = (props: AuthProviderProps) => {
   const { children } = props;
   const [user, setUser] = useState<UserType>(null);
-  const [iSAuthed, setISAuthed] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setUser(user);
-      setISAuthed(true);
+      setIsAuthed(true);
     });
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, user, signUp, signIn, signOut }}>{iSAuthed && children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ auth, user, signUp, signIn, signOut }}>{isAuthed && children}</AuthContext.Provider>
   );
 };
 
