@@ -4,17 +4,14 @@ import { createTheme } from '@mui/material/styles';
 declare module '@mui/material/styles' {
   interface TypographyVariants {
     siteName: React.CSSProperties;
-    regular: React.CSSProperties;
   }
   interface TypographyVariantsOptions {
     siteName?: React.CSSProperties;
-    regular?: React.CSSProperties;
   }
 }
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     siteName: true;
-    regular: true;
   }
 }
 
