@@ -1,16 +1,16 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import ProjectPage from './ProjectPage';
+import Projects from './Projects';
 
 export default {
   title: 'pages/ProjectPage',
-  component: ProjectPage,
+  component: Projects,
   parameters: {
     layout: 'fullscreen',
   },
-} as ComponentMeta<typeof ProjectPage>;
+} as ComponentMeta<typeof Projects>;
 
-const Template: ComponentStory<typeof ProjectPage> = () => <ProjectPage />;
+const Template: ComponentStory<typeof Projects> = () => <Projects />;
 
 export const FirstStory = Template.bind({});
 

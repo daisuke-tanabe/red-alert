@@ -8,7 +8,7 @@ import { createRoot } from 'react-dom/client';
 import theme from '../src/theme';
 import Home from './components/pages/Home/Home';
 import Login from './components/pages/Login/Login';
-import ProjectPage from './components/pages/ProjectPage/ProjectPage';
+import Projects from './components/pages/Projects/Projects';
 import Register from './components/pages/Register/Register';
 import { AuthProvider } from './provider/AuthProvider';
 
@@ -25,10 +25,10 @@ root.render(
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/projects" element={<ProjectPage />} />
-            <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/" element={<Home />} />
+            <Route path="/projects/:id" element={<Projects />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
