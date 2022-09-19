@@ -1,25 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import {
-  Box,
-  DialogTitle,
-  IconButton,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  TextField,
-  Typography,
-  Dialog,
-  Button,
-  ButtonBase,
-  Container,
-  Stack,
-} from '@mui/material';
+import { Box, Typography, ButtonBase, Container } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
-import { addDoc, collection, getDocs, setDoc, onSnapshot, doc } from 'firebase/firestore';
+import { addDoc, collection, getDocs, setDoc } from 'firebase/firestore';
 import { db } from '../../../../firebase.config';
 import { AuthContext } from '../../../provider/AuthProvider';
 import ProjectCardBase from '../../molecules/ProjectCard/ProjectCardBase';
