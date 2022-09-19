@@ -21,7 +21,7 @@ type ProjectAdditionDialogBaseProps = {
   handleClickSaveButton: () => Promise<void>;
 };
 
-const ProjectAdditionDialogBase = (props: ProjectAdditionDialogBaseProps) => {
+const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
   const {
     isOpen,
     handleClickDialogToggleButton,
@@ -77,4 +77,4 @@ const ProjectAdditionDialogBase = (props: ProjectAdditionDialogBaseProps) => {
   );
 };
 
-export default ProjectAdditionDialogBase;
+export default ProjectAdditionDialog;

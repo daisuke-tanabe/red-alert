@@ -7,9 +7,9 @@ import { useTheme } from '@mui/material/styles';
 import { addDoc, collection, getDocs, setDoc } from 'firebase/firestore';
 import { db } from '../../../../firebase.config';
 import { AuthContext } from '../../../provider/AuthProvider';
-import ProjectCardBase from '../../molecules/ProjectCard/ProjectCardBase';
+import ProjectCard from '../../molecules/ProjectCard/ProjectCard';
 import Header from '../../organisms/Header/Header';
-import ProjectAdditionDialogBase from '../../organisms/ProjectAdditionDialog/ProjectAdditionDialogBase';
+import ProjectAdditionDialog from '../../organisms/ProjectAdditionDialog/ProjectAdditionDialog';
 
 type Projects = {
   id: string;
@@ -131,7 +131,7 @@ const Home = () => {
                   const props = { id, name };
                   return (
                     <Grid key={id} xs={12} sm={6}>
-                      <ProjectCardBase {...props} />
+                      <ProjectCard {...props} />
                     </Grid>
                   );
                 })}
@@ -139,7 +139,7 @@ const Home = () => {
             </Container>
           </Box>
 
-          <ProjectAdditionDialogBase
+          <ProjectAdditionDialog
             isOpen={isDialogOpen}
             handleClickDialogToggleButton={handleClickDialogToggleButton}
             handleChangeProjectName={handleChangeProjectName}

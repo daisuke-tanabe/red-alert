@@ -8,7 +8,7 @@ type ProjectCardProps = {
   name: string;
 };
 
-const ProjectCardBase = (props: ProjectCardProps) => {
+const ProjectCard = (props: ProjectCardProps) => {
   const { id, name } = props;
   const theme = useTheme();
 
@@ -34,4 +34,4 @@ const ProjectCardBase = (props: ProjectCardProps) => {
   );
 };
 
-export default ProjectCardBase;
+export default ProjectCard;
