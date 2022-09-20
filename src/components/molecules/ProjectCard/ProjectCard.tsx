@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { ButtonBase, Paper, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -34,4 +34,4 @@ const ProjectCard = (props: ProjectCardProps) => {
   );
 };
 
-export default ProjectCard;
+export default memo(ProjectCard);
