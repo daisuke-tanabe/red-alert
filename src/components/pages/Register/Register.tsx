@@ -16,7 +16,6 @@ import {
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import LogoImage from '../../../assets/images/logo.webp';
 import { AuthContext } from '../../../provider/AuthProvider';
 
 type State = {
@@ -62,8 +61,7 @@ const Register = () => {
             css={{ background: '#bd1333', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
             <div css={{ display: 'flex' }}>
-              <img src={LogoImage} width="48px" height="48px" alt="Red Alert" />
-              <div css={{ color: 'white', fontSize: '36px', fontWeight: 'bold', marginLeft: '20px' }}>Red Alert</div>
+              <div css={{ color: 'white', fontSize: '36px', fontWeight: 'bold' }}>Red Alert</div>
             </div>
           </Grid2>
           <Grid2 xs={7.5} css={{ background: '#fff', display: 'flex', flexDirection: 'column' }}>

@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import LogoImage from '../../../assets/images/logo.webp';
 import { AuthContext } from '../../../provider/AuthProvider';
 import FullLayout from '../../templates/FullLayout/FullLayout';
 
@@ -67,8 +66,7 @@ const Login = () => {
                 padding: '0 20px',
               }}
             >
-              <img css={{ marginLeft: '-24px' }} src={LogoImage} width="48px" height="48px" alt="Red Alert" />
-              <div css={{ color: 'white', fontSize: '36px', fontWeight: 'bold', marginLeft: '20px' }}>Red Alert</div>
+              <div css={{ color: 'white', fontSize: '36px', fontWeight: 'bold' }}>Red Alert</div>
             </div>
             <Paper css={{ padding: '48px 36px' }}>
               <form onSubmit={handleSubmit}>
