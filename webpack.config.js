@@ -5,10 +5,11 @@ const dotenv = require('dotenv')
 const webpack = require("webpack");
 
 const mode = process.env.NODE_ENV;
+const isProd = mode === 'production';
 const distPath = path.join(__dirname, 'dist');
 const env = dotenv.config().parsed;
 
-module.exports = {
+const config = {
   mode,
   entry: {
     app: './src/app.tsx',
@@ -56,7 +57,6 @@ module.exports = {
       }),
     ],
   },
-  devtool: 'eval-source-map',
   devServer: {
     port: 3000,
     historyApiFallback: true,
@@ -81,3 +81,7 @@ module.exports = {
   ],
   target: 'web',
 };
+
+if (!isProd) config.devtool = 'eval-source-map';
+
+module.exports = config;
