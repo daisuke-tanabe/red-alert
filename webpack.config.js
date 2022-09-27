@@ -57,16 +57,6 @@ const config = {
       }),
     ],
   },
-  devServer: {
-    port: 3000,
-    historyApiFallback: true,
-    client: {
-      overlay: {
-        errors: true,
-        warnings: false,
-      }
-    }
-  },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
   },
@@ -82,6 +72,18 @@ const config = {
   target: 'web',
 };
 
-if (!isProd) config.devtool = 'eval-source-map';
+if (!isProd) {
+  config.devtool = 'eval-source-map';
+  config.devServer = {
+    port: 3000,
+    historyApiFallback: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      }
+    }
+  };
+}
 
 module.exports = config;
