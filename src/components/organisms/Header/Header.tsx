@@ -6,14 +6,10 @@ import { Avatar, Box, Toolbar, IconButton, ButtonBase, Typography, Stack, MenuIt
 import { useTheme } from '@mui/material/styles';
 import { AuthContext } from '../../../provider/AuthProvider';
 
-type HeaderProps = {
-  userPhoto: string;
-};
-
-const Header = (props: HeaderProps) => {
-  const { userPhoto } = props;
-  const { auth, signOut } = useContext(AuthContext);
+const Header = () => {
+  const { auth, signOut, user } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const userPhoto = user && user.photoURL ? user.photoURL.replace('normal', 'bigger') : '';
   const theme = useTheme();
   const open = Boolean(anchorEl);
   const navigate = useNavigate();

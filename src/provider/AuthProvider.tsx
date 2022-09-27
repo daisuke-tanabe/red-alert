@@ -38,9 +38,10 @@ const AuthProvider = (props: AuthProviderProps) => {
 
       if (user) {
         const uid = user.uid;
+        // TODO firebase.config.jsでやっている気がする
         const db = getFirestore(app);
 
-        // DocumentReference
+        // uidに紐づくDocRefを取得する
         const userRef = doc(db, 'users', uid);
         // DocumentSnapshotはここから
         const userSnap = await getDoc(userRef);
@@ -48,7 +49,7 @@ const AuthProvider = (props: AuthProviderProps) => {
         // usersのドキュメントにuidに紐づくものが無ければ新しいドキュメントを作成する
         if (!userSnap.exists()) {
           await setDoc(userRef, {
-            uud: uid,
+            uid,
             projects: [],
           });
         }

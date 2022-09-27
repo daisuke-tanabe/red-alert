@@ -4,96 +4,136 @@ import AddIcon from '@mui/icons-material/Add';
 import { Box, Typography, ButtonBase, Container } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
-import { addDoc, collection, getDocs, setDoc } from 'firebase/firestore';
-import { db } from '../../../../firebase.config';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  query,
+  where,
+  documentId,
+  DocumentReference,
+} from 'firebase/firestore';
+import { app, db } from '../../../../firebase.config';
 import { AuthContext } from '../../../provider/AuthProvider';
 import ProjectCard from '../../molecules/ProjectCard/ProjectCard';
 import Header from '../../organisms/Header/Header';
 import ProjectAdditionDialog from '../../organisms/ProjectAdditionDialog/ProjectAdditionDialog';
 
-type Projects = {
+type Project = {
   id: string;
   name: string;
   url: string;
-}[];
+};
+type MonitoringProjects = Project[];
+// TODO 型が他ファイルと重複している
+type AlgoliaHit = {
+  objectID: string;
+  name: string;
+  url: string;
+  isChecked: boolean;
+};
 
 const Home = () => {
-  const { user } = useContext(AuthContext);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [project, setProject] = useState({ name: '', url: '' });
-  const [projects, setProjects] = useState<Projects>([]);
-  const userPhoto = user && user.photoURL ? user.photoURL.replace('normal', 'bigger') : '';
-  const headerProps = { userPhoto };
   const theme = useTheme();
 
-  // 読み取りが相当増加するのでレンダーリングを最適化してから導入する必要あり
-  // onSnapshot(collection(db, "projects"), (querySnapshot) => {
-  //   const newProjects = querySnapshot.docs.map((doc) => {
-  //     const data = doc.data();
-  //     return {
-  //       id: data.id,
-  //       name: data.name,
-  //       url: data.url,
-  //     };
-  //   });
-  //   console.log('onSnapshot:', newProjects);
-  // });
+  // ユーザー情報
+  const { user } = useContext(AuthContext);
+  const uid = user && user.uid ? user.uid : '';
+
+  // TODO userがnullの時、例えばログイン中にアプリケーションのキャッシュをクリアするとエラーが発生してログイン画面に戻れない
+  // usersコレクションの該当uidを持ったドキュメントのリファレンス
+  const userDocRef = doc(db, 'users', uid);
+  // projectsコレクションのリファレンス
+  const projectsColRef = collection(db, 'projects');
+
+  // 監視プロジェクト
+  const [monitoringProjects, setMonitoringProjects] = useState<MonitoringProjects>([]);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // 登録するプロジェクトの状態
+  const [project, setProject] = useState({ id: '', name: '', url: '' });
 
   const handleClickDialogToggleButton = () => setIsDialogOpen(!isDialogOpen);
 
-  const handleChangeProjectName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setProject({
-      ...project,
-      name: event.target.value,
-    });
+  const handleClickAddButton = async (result: AlgoliaHit[]) => {
+    const filteredCheckedResult = result.filter(({ isChecked }) => isChecked);
+    const mappedCheckedResult = filteredCheckedResult.map(({ objectID }) => objectID);
+
+    // projectsコレクションへのリファレンスをとってユーザーにリファレンスを追加する
+    const querySnapshot = await getDocs(query(projectsColRef, where(documentId(), 'in', mappedCheckedResult)));
+    await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        const data = doc.data();
+        await updateDoc(userDocRef, {
+          projects: arrayUnion(doc.ref),
+        });
+        const newProject = {
+          id: data.id,
+          name: data.name,
+          url: data.url,
+        };
+        setMonitoringProjects([...monitoringProjects, newProject]);
+      }),
+    );
+    setIsDialogOpen(false);
   };
 
-  const handleChangeProjectUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setProject({
-      ...project,
-      url: event.target.value,
-    });
-  };
-
+  // TODO 登録した直後は全部のプロジェクトが表示される問題を抱えている
   const handleClickSaveButton = async () => {
-    // DocumentReference
-    const projectsCol = collection(db, 'projects');
+    // TODO nameが重複しないようにチェックしたほうがいいかも(セキュリティルールいき？)
+    // projectsコレクションにランダムIDを付与したproject(新規登録プロジェクト)を作成する
+    const projectDocRef = await addDoc(projectsColRef, project);
+    // 上記で作成したドキュメントのフィールドのidにドキュメントのidを追加する
+    await setDoc(projectDocRef, { id: projectDocRef.id }, { merge: true });
 
-    // TODO nameが重複しないようにチェックしたほうがいいかも
-    await addDoc(projectsCol, project).then(async (docRef) => {
-      // doc(projectsCol, docRef.id);
-      await setDoc(docRef, { id: docRef.id }, { merge: true });
+    // TODO nullは入らないはずなのでuidをasにしているが眠い頭のせいか間違っているかも？後で見直しが必要
+    // 自身を対象にしたuserへのリファレンス、projectを参照型でuserが格納
+    await updateDoc(userDocRef, {
+      projects: arrayUnion(projectDocRef),
     });
 
-    const querySnapshot = await getDocs(projectsCol);
+    // projectsコレクションのドキュメントを全て取得する
+    const querySnapshot = await getDocs(projectsColRef);
     const newProjects = querySnapshot.docs.map((doc) => {
-      const data = doc.data();
-      return {
-        id: data.id,
-        name: data.name,
-        url: data.url,
-      };
+      const { id, name, url } = doc.data();
+      return { id, name, url };
     });
-    setProjects(newProjects);
+    setMonitoringProjects(newProjects);
 
     // TODO 成功したらstateの変更をするようにする
-    setProject({ name: '', url: '' });
+    setProject({ id: '', name: '', url: '' });
     setIsDialogOpen(false);
   };
 
   useEffect(() => {
     (async () => {
-      const projectsCol = collection(db, 'projects');
-      const querySnapshot = await getDocs(projectsCol);
-      const newProjects = querySnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: data.id,
-          name: data.name,
-          url: data.url,
-        };
-      });
-      setProjects(newProjects);
+      // TODO nullは入らないはずなのでuidをasにしているが眠い頭のせいか間違っているかも？後で見直しが必要
+      // 自身を対象にしたuserへのリファレンス
+      const userSnap = await getDoc(userDocRef);
+      // TODO このあたりはまだ見直し
+      if (userSnap.exists()) {
+        const { projects } = userSnap.data();
+        const newProjects = projects.map(async (project: DocumentReference<Project>) => {
+          const doc = await getDoc(project);
+          return doc.data();
+        });
+        Promise.all(newProjects).then((result) => {
+          const newProjects = result.map((data) => {
+            return {
+              id: data.id,
+              name: data.name,
+              url: data.url,
+            };
+          });
+          setMonitoringProjects(newProjects);
+        });
+      }
     })();
   }, []);
 
@@ -101,7 +141,7 @@ const Home = () => {
     <>
       {user ? (
         <>
-          <Header {...headerProps} />
+          <Header />
 
           <Box sx={{ flexGrow: 1, px: 3, mt: -9 }}>
             <Container maxWidth="sm" disableGutters>
@@ -127,7 +167,7 @@ const Home = () => {
                   </Box>
                 </Grid>
 
-                {projects.map(({ id, name }) => {
+                {monitoringProjects.map(({ id, name }) => {
                   const props = { id, name };
                   return (
                     <Grid key={id} xs={12} sm={6}>
@@ -141,10 +181,11 @@ const Home = () => {
 
           <ProjectAdditionDialog
             isOpen={isDialogOpen}
+            project={project}
+            setProject={setProject}
             handleClickDialogToggleButton={handleClickDialogToggleButton}
-            handleChangeProjectName={handleChangeProjectName}
-            handleChangeProjectUrl={handleChangeProjectUrl}
             handleClickSaveButton={handleClickSaveButton}
+            handleClickAddButton={handleClickAddButton}
           />
         </>
       ) : (

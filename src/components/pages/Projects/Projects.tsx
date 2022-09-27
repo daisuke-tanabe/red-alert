@@ -228,14 +228,12 @@ const rows = [
 
 const Projects = () => {
   const { user } = useContext(AuthContext);
-  const userPhoto = user && user.photoURL ? user.photoURL.replace('normal', 'bigger') : '';
-  const headerProps = { userPhoto };
 
   return (
     <>
       {user ? (
         <>
-          <Header {...headerProps} />
+          <Header />
 
           <Box sx={{ flexGrow: 1, px: 3, mt: -9 }}>
             <Container maxWidth="sm" disableGutters>
