@@ -1,3 +1,7 @@
 node_modules
 dist
+webpack.*
+firebase.*
+
+# 一時的に避けている
 src/**/*.stories.tsx
