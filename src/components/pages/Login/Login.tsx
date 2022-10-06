@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import { AuthContext } from '../../../provider/AuthProvider';
+import { AuthContext } from '../../../lib/AuthProvider';
 import FullLayout from '../../templates/FullLayout/FullLayout';
 
 type State = {

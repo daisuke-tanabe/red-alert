@@ -4,7 +4,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import { Avatar, Box, Toolbar, IconButton, ButtonBase, Typography, Stack, MenuItem, Paper, Menu } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { AuthContext } from '../../../provider/AuthProvider';
+import { AuthContext } from '../../../lib/AuthProvider';
 
 const Header = () => {
   const { auth, signOut, user } = useContext(AuthContext);

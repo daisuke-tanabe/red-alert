@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { AuthContext } from '../../../provider/AuthProvider';
+import { AuthContext } from '../../../lib/AuthProvider';
 import Header from '../../organisms/Header/Header';
 
 const columns = [

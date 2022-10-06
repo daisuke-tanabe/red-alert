@@ -16,7 +16,7 @@ import {
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import { AuthContext } from '../../../provider/AuthProvider';
+import { AuthContext } from '../../../lib/AuthProvider';
 
 type State = {
   email: string;

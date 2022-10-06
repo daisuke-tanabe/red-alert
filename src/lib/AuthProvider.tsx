@@ -1,8 +1,7 @@
 import React, { createContext, useEffect, useState, ReactNode } from 'react';
 import { getAuth, onAuthStateChanged, type User, Auth } from 'firebase/auth';
-import { getFirestore, collection, addDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 import { app } from '../../firebase.config';
-import { signIn, signOut, signUp } from '../lib/auth';
+import { signIn, signOut, signUp } from './auth';
 
 type UserType = User | null;
 type DefaultValue = {
@@ -35,25 +34,6 @@ const AuthProvider = (props: AuthProviderProps) => {
     onAuthStateChanged(auth, async (user) => {
       setUser(user);
       setIsAuthed(true);
-
-      if (user) {
-        const uid = user.uid;
-        // TODO firebase.config.jsでやっている気がする
-        const db = getFirestore(app);
-
-        // uidに紐づくDocRefを取得する
-        const userRef = doc(db, 'users', uid);
-        // DocumentSnapshotはここから
-        const userSnap = await getDoc(userRef);
-
-        // usersのドキュメントにuidに紐づくものが無ければ新しいドキュメントを作成する
-        if (!userSnap.exists()) {
-          await setDoc(userRef, {
-            uid,
-            projects: [],
-          });
-        }
-      }
     });
   }, []);
 

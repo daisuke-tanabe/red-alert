@@ -20,7 +20,7 @@ import {
   DocumentReference,
 } from 'firebase/firestore';
 import { app, db } from '../../../../firebase.config';
-import { AuthContext } from '../../../provider/AuthProvider';
+import { AuthContext } from '../../../lib/AuthProvider';
 import ProjectCard from '../../molecules/ProjectCard/ProjectCard';
 import Header from '../../organisms/Header/Header';
 import ProjectAdditionDialog from '../../organisms/ProjectAdditionDialog/ProjectAdditionDialog';
