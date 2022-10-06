@@ -17,30 +17,30 @@ type SignUp = (value: Value) => Promise<void>;
 const signIn: SignIn = async ({ auth, email, password }) => {
   await signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      /* something */
+      console.log(`SUCCESS: signInWithEmailAndPassword ${userCredential}`);
     })
     .catch((error) => {
-      /* something */
+      console.log(`ERROR: signInWithEmailAndPassword ${error}`);
     });
 };
 
 const signOut: SignOut = async (auth) => {
   await firebaseSignOut(auth)
     .then(() => {
-      /* something */
+      /* void */
     })
     .catch((error) => {
-      /* something */
+      console.log(`ERROR: firebaseSignOut ${error}`);
     });
 };
 
 const signUp: SignUp = async ({ auth, email, password }) => {
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      /* something */
+      console.log(`SUCCESS: createUserWithEmailAndPassword ${userCredential}`);
     })
     .catch((error) => {
-      /* something */
+      console.log(`ERROR: createUserWithEmailAndPassword ${error}`);
     });
 };
 

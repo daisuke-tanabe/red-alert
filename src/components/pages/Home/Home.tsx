@@ -1,15 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import AddIcon from '@mui/icons-material/Add';
-import { Box, Typography, ButtonBase, Container } from '@mui/material';
+import { Box, Typography, Container } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
+import { type User } from 'firebase/auth';
 import {
   addDoc,
   collection,
   doc,
   getDocs,
-  getFirestore,
   getDoc,
   setDoc,
   updateDoc,
@@ -19,8 +16,9 @@ import {
   documentId,
   DocumentReference,
 } from 'firebase/firestore';
-import { app, db } from '../../../../firebase.config';
+import { db } from '../../../../firebase.config';
 import { AuthContext } from '../../../lib/AuthProvider';
+import AddButton from '../../atoms/AddButton/AddButton';
 import ProjectCard from '../../molecules/ProjectCard/ProjectCard';
 import Header from '../../organisms/Header/Header';
 import ProjectAdditionDialog from '../../organisms/ProjectAdditionDialog/ProjectAdditionDialog';
@@ -40,26 +38,24 @@ type AlgoliaHit = {
 };
 
 const Home = () => {
-  const theme = useTheme();
+  // user が null なら PrivateRoute でリダイレクトでここには到達しない
+  const { user } = useContext(AuthContext) as { user: User };
 
-  // ユーザー情報
-  const { user } = useContext(AuthContext);
-  const uid = user && user.uid ? user.uid : '';
+  // usersコレクションの該当uidを持つユーザーのドキュメントのリファレンス
+  const userDocRef = doc(db, 'users', user.uid);
 
-  // TODO userがnullの時、例えばログイン中にアプリケーションのキャッシュをクリアするとエラーが発生してログイン画面に戻れない
-  // usersコレクションの該当uidを持ったドキュメントのリファレンス
-  const userDocRef = doc(db, 'users', uid);
   // projectsコレクションのリファレンス
   const projectsColRef = collection(db, 'projects');
 
   // 監視プロジェクト
   const [monitoringProjects, setMonitoringProjects] = useState<MonitoringProjects>([]);
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogActive, setIsDialogActive] = useState(false);
+
   // 登録するプロジェクトの状態
   const [project, setProject] = useState({ id: '', name: '', url: '' });
 
-  const handleClickDialogToggleButton = () => setIsDialogOpen(!isDialogOpen);
+  const toggleDialog = () => setIsDialogActive(!isDialogActive);
 
   const handleClickAddButton = async (result: AlgoliaHit[]) => {
     const filteredCheckedResult = result.filter(({ isChecked }) => isChecked);
@@ -81,10 +77,9 @@ const Home = () => {
         setMonitoringProjects([...monitoringProjects, newProject]);
       }),
     );
-    setIsDialogOpen(false);
+    setIsDialogActive(false);
   };
 
-  // TODO 登録した直後は全部のプロジェクトが表示される問題を抱えている
   const handleClickSaveButton = async () => {
     // TODO nameが重複しないようにチェックしたほうがいいかも(セキュリティルールいき？)
     // projectsコレクションにランダムIDを付与したproject(新規登録プロジェクト)を作成する
@@ -92,7 +87,6 @@ const Home = () => {
     // 上記で作成したドキュメントのフィールドのidにドキュメントのidを追加する
     await setDoc(projectDocRef, { id: projectDocRef.id }, { merge: true });
 
-    // TODO nullは入らないはずなのでuidをasにしているが眠い頭のせいか間違っているかも？後で見直しが必要
     // 自身を対象にしたuserへのリファレンス、projectを参照型でuserが格納
     await updateDoc(userDocRef, {
       projects: arrayUnion(projectDocRef),
@@ -108,89 +102,60 @@ const Home = () => {
 
     // TODO 成功したらstateの変更をするようにする
     setProject({ id: '', name: '', url: '' });
-    setIsDialogOpen(false);
+    setIsDialogActive(false);
   };
 
   useEffect(() => {
     (async () => {
-      // TODO nullは入らないはずなのでuidをasにしているが眠い頭のせいか間違っているかも？後で見直しが必要
-      // 自身を対象にしたuserへのリファレンス
+      // ユーザーのスナップショット
       const userSnap = await getDoc(userDocRef);
-      // TODO このあたりはまだ見直し
-      if (userSnap.exists()) {
-        const { projects } = userSnap.data();
-        const newProjects = projects.map(async (project: DocumentReference<Project>) => {
-          const doc = await getDoc(project);
-          return doc.data();
-        });
-        Promise.all(newProjects).then((result) => {
-          const newProjects = result.map((data) => {
-            return {
-              id: data.id,
-              name: data.name,
-              url: data.url,
-            };
-          });
-          setMonitoringProjects(newProjects);
-        });
-      }
+      if (!userSnap.exists()) return;
+      // TODO withConverterでの型定義が課題
+      const { projects } = userSnap.data();
+      const promises: Promise<Project>[] = projects.map(async (project: DocumentReference<Project>) => {
+        const doc = await getDoc(project);
+        return doc.data();
+      });
+      setMonitoringProjects(await Promise.all(promises));
     })();
   }, []);
 
   return (
     <>
-      {user ? (
-        <>
-          <Header />
+      <Header />
 
-          <Box sx={{ flexGrow: 1, px: 3, mt: -9 }}>
-            <Container maxWidth="sm" disableGutters>
-              <Grid container spacing={3}>
-                <Grid xs={12}>
-                  <Typography sx={{ color: '#fff', fontSize: '1rem', fontWeight: 'bold', mb: 1 }}>
-                    プロジェクトを監視
-                  </Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <ButtonBase
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        color: theme.palette.primary.main,
-                        background: 'white',
-                        borderRadius: '50%',
-                        boxShadow: theme.shadows['1'],
-                      }}
-                      onClick={handleClickDialogToggleButton}
-                    >
-                      <AddIcon />
-                    </ButtonBase>
-                  </Box>
+      <Box sx={{ flexGrow: 1, px: 3, mt: -9 }}>
+        <Container maxWidth="sm" disableGutters>
+          <Grid container spacing={3}>
+            <Grid xs={12}>
+              <Typography sx={{ color: '#fff', fontSize: '1rem', fontWeight: 'bold', mb: 1 }}>
+                プロジェクトを監視
+              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <AddButton handleClick={toggleDialog} />
+              </Box>
+            </Grid>
+
+            {monitoringProjects.map(({ id, name }) => {
+              const props = { id, name };
+              return (
+                <Grid key={id} xs={12} sm={6}>
+                  <ProjectCard {...props} />
                 </Grid>
+              );
+            })}
+          </Grid>
+        </Container>
+      </Box>
 
-                {monitoringProjects.map(({ id, name }) => {
-                  const props = { id, name };
-                  return (
-                    <Grid key={id} xs={12} sm={6}>
-                      <ProjectCard {...props} />
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </Container>
-          </Box>
-
-          <ProjectAdditionDialog
-            isOpen={isDialogOpen}
-            project={project}
-            setProject={setProject}
-            handleClickDialogToggleButton={handleClickDialogToggleButton}
-            handleClickSaveButton={handleClickSaveButton}
-            handleClickAddButton={handleClickAddButton}
-          />
-        </>
-      ) : (
-        <Navigate to={'/login'} />
-      )}
+      <ProjectAdditionDialog
+        isOpen={isDialogActive}
+        project={project}
+        setProject={setProject}
+        handleClickDialogToggleButton={toggleDialog}
+        handleClickSaveButton={handleClickSaveButton}
+        handleClickAddButton={handleClickAddButton}
+      />
     </>
   );
 };

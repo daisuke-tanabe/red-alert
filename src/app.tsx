@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,7 +10,7 @@ import Home from './components/pages/Home/Home';
 import Login from './components/pages/Login/Login';
 import Projects from './components/pages/Projects/Projects';
 import Register from './components/pages/Register/Register';
-import { AuthProvider } from './lib/AuthProvider';
+import AuthProvider from './lib/AuthProvider';
 import PrivateRoute from './lib/PrivateRoute';
 
 const emotionCache = createCache({
