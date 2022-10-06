@@ -1,36 +1,30 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { ButtonBase, Paper, Typography } from '@mui/material';
+import EjectIcon from '@mui/icons-material/Eject';
+import { Card, CardActionArea, CardActions, IconButton, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 type ProjectCardProps = {
   id: string;
   name: string;
+  handleClickEject: (id: string) => void;
 };
 
 const ProjectCard = (props: ProjectCardProps) => {
-  const { id, name } = props;
+  const { id, name, handleClickEject } = props;
   const theme = useTheme();
 
   return (
-    <Paper sx={{ height: 124 }}>
-      <ButtonBase
-        component={Link}
-        to={`/projects/${id}`}
-        sx={{
-          height: '100%',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start',
-          width: '100%',
-          p: 2.5,
-          color: theme.palette.primary.main,
-          textAlign: 'left',
-        }}
-      >
-        <Typography sx={{ fontSize: '0.875rem' }}>{name}</Typography>
-      </ButtonBase>
-    </Paper>
+    <Card sx={{ height: 128, position: 'relative' }}>
+      <CardActionArea sx={{ height: '100%', px: 2, py: 1.75 }} component={Link} to={`/projects/${id}`}>
+        <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}>{name}</Typography>
+      </CardActionArea>
+      <CardActions sx={{ position: 'absolute', p: 0, bottom: 8, left: 8 }}>
+        <IconButton onClick={() => handleClickEject(id)} sx={{ color: theme.palette.grey['400'] }}>
+          <EjectIcon sx={{ fontSize: '1rem' }} />
+        </IconButton>
+      </CardActions>
+    </Card>
   );
 };
 

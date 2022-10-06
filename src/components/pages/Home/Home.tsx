@@ -14,6 +14,7 @@ import {
   query,
   where,
   documentId,
+  arrayRemove,
   DocumentReference,
 } from 'firebase/firestore';
 import { db } from '../../../../firebase.config';
@@ -56,6 +57,22 @@ const Home = () => {
   const [project, setProject] = useState({ id: '', name: '', url: '' });
 
   const toggleDialog = () => setIsDialogActive(!isDialogActive);
+
+  const ejectProject = async (id: string) => {
+    // ユーザーのスナップショット
+    const userSnap = await getDoc(userDocRef);
+    if (!userSnap.exists()) return;
+    // TODO withConverterでの型定義が課題
+    const { projects } = userSnap.data();
+    const projectPromise = projects.find(async (project: DocumentReference<Project>) => {
+      const doc = await getDoc(project);
+      return doc.id === id;
+    });
+
+    // プロジェクトの参照を削除してステートからも削除する
+    await updateDoc(userDocRef, { projects: arrayRemove(projectPromise) });
+    setMonitoringProjects(monitoringProjects.filter(({ id: _id }) => _id !== id));
+  };
 
   const handleClickAddButton = async (result: AlgoliaHit[]) => {
     const filteredCheckedResult = result.filter(({ isChecked }) => isChecked);
@@ -137,7 +154,7 @@ const Home = () => {
             </Grid>
 
             {monitoringProjects.map(({ id, name }) => {
-              const props = { id, name };
+              const props = { id, name, handleClickEject: ejectProject };
               return (
                 <Grid key={id} xs={12} sm={6}>
                   <ProjectCard {...props} />
