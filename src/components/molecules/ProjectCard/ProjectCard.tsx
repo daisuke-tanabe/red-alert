@@ -15,11 +15,36 @@ const ProjectCard = (props: ProjectCardProps) => {
   const theme = useTheme();
 
   return (
-    <Card sx={{ height: 128, position: 'relative' }}>
-      <CardActionArea sx={{ height: '100%', px: 2, py: 1.75 }} component={Link} to={`/projects/${id}`}>
-        <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}>{name}</Typography>
+    <Card sx={{ height: 148, position: 'relative' }}>
+      <CardActionArea
+        sx={{
+          alignItems: 'normal',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          height: '100%',
+          p: 2,
+        }}
+        component={Link}
+        to={`/projects/${id}`}
+      >
+        <Typography
+          variant="cardTitle"
+          component="div"
+          sx={{
+            display: '-webkit-box',
+            '-webkit-box-orient': 'vertical',
+            '-webkit-line-clamp': '3',
+            overflow: 'hidden',
+          }}
+        >
+          {name}
+        </Typography>
+        <Typography variant="cardText" color={theme.palette.grey['400']} component="div">
+          {id}
+        </Typography>
       </CardActionArea>
-      <CardActions sx={{ position: 'absolute', p: 0, bottom: 8, left: 8 }}>
+      <CardActions sx={{ position: 'absolute', p: 0, bottom: 10, right: 10 }}>
         <IconButton onClick={() => handleClickEject(id)} sx={{ color: theme.palette.grey['400'] }}>
           <EjectIcon sx={{ fontSize: '1rem' }} />
         </IconButton>

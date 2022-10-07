@@ -4,19 +4,25 @@ import { createTheme } from '@mui/material/styles';
 declare module '@mui/material/styles' {
   interface TypographyVariants {
     siteName: React.CSSProperties;
+    cardTitle: React.CSSProperties;
+    cardText: React.CSSProperties;
   }
   interface TypographyVariantsOptions {
     siteName?: React.CSSProperties;
+    cardTitle: React.CSSProperties;
+    cardText: React.CSSProperties;
   }
 }
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     siteName: true;
+    cardTitle: true;
+    cardText: true;
   }
 }
 
+// https://mui.com/material-ui/customization/default-theme/#main-content
 const theme = createTheme({
-  // https://mui.com/material-ui/customization/default-theme/?expand-path=$.palette
   palette: {
     common: {
       black: '#222',
@@ -41,6 +47,7 @@ const theme = createTheme({
       contrastText: '#222',
     },
   },
+  // typographyでは色は指定しないほうがよさそう
   typography: {
     fontFamily: [
       'Helvetica Neue',
@@ -56,8 +63,14 @@ const theme = createTheme({
       fontSize: '1.25rem',
       fontWeight: 'bold',
     },
-    body1: {
+    cardTitle: {
       fontSize: '0.875rem',
+      fontWeight: 'bold',
+      lineHeight: 1.75,
+    },
+    cardText: {
+      fontSize: '0.8125rem',
+      lineHeight: 1.6,
     },
   },
 });
