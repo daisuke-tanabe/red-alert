@@ -75,7 +75,8 @@ const Login = () => {
                   <FormControl variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                     <OutlinedInput
-                      id="password"
+                      autoComplete="new-password"
+                      id="new-password"
                       type={isShowPassword ? 'text' : 'password'}
                       value={values.password}
                       onChange={handleChange('password')}

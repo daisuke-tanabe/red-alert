@@ -141,6 +141,7 @@ const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
                       新規登録するプロジェクトの名前とURLを入力してください。
                     </DialogContentText>
                     <InputBase
+                      autoComplete="off"
                       id="name"
                       placeholder="プロジェクトの名前"
                       type="text"
@@ -156,6 +157,7 @@ const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
                       onChange={handleChangeInput}
                     />
                     <InputBase
+                      autoComplete="off"
                       id="url"
                       placeholder="プロジェクトのURL"
                       type="text"
@@ -174,6 +176,7 @@ const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
                   <>
                     <DialogContentText sx={{ mb: 4 }}>登録済みのプロジェクトから追加します。</DialogContentText>
                     <InputBase
+                      autoComplete="off"
                       id="search"
                       placeholder="プロジェクトを検索"
                       type="text"
