@@ -59,18 +59,9 @@ const Home = () => {
   const toggleDialog = () => setIsDialogActive(!isDialogActive);
 
   const ejectProject = async (id: string) => {
-    // ユーザーのスナップショット
-    const userSnap = await getDoc(userDocRef);
-    if (!userSnap.exists()) return;
-    // TODO withConverterでの型定義が課題
-    const { projects } = userSnap.data();
-    const projectPromise = projects.find(async (project: DocumentReference<Project>) => {
-      const doc = await getDoc(project);
-      return doc.id === id;
-    });
-
+    const projectsDocRef = doc(db, 'projects', id);
     // プロジェクトの参照を削除してステートからも削除する
-    await updateDoc(userDocRef, { projects: arrayRemove(projectPromise) });
+    await updateDoc(userDocRef, { projects: arrayRemove(projectsDocRef) });
     setMonitoringProjects(monitoringProjects.filter(({ id: _id }) => _id !== id));
   };
 
@@ -87,7 +78,7 @@ const Home = () => {
           projects: arrayUnion(doc.ref),
         });
         const newProject = {
-          id: data.id,
+          id: doc.id,
           name: data.name,
           url: data.url,
         };
@@ -100,22 +91,22 @@ const Home = () => {
   const handleClickSaveButton = async () => {
     // TODO nameが重複しないようにチェックしたほうがいいかも(セキュリティルールいき？)
     // projectsコレクションにランダムIDを付与したproject(新規登録プロジェクト)を作成する
-    const projectDocRef = await addDoc(projectsColRef, project);
-    // 上記で作成したドキュメントのフィールドのidにドキュメントのidを追加する
-    await setDoc(projectDocRef, { id: projectDocRef.id }, { merge: true });
-
+    const projectDocRef = await addDoc(projectsColRef, {
+      name: project.name,
+      url: project.url,
+    });
     // 自身を対象にしたuserへのリファレンス、projectを参照型でuserが格納
     await updateDoc(userDocRef, {
       projects: arrayUnion(projectDocRef),
     });
-
-    // projectsコレクションのドキュメントを全て取得する
-    const querySnapshot = await getDocs(projectsColRef);
-    const newProjects = querySnapshot.docs.map((doc) => {
-      const { id, name, url } = doc.data();
-      return { id, name, url };
-    });
-    setMonitoringProjects(newProjects);
+    setMonitoringProjects([
+      ...monitoringProjects,
+      {
+        id: projectDocRef.id,
+        name: project.name,
+        url: project.url,
+      },
+    ]);
 
     // TODO 成功したらstateの変更をするようにする
     setProject({ id: '', name: '', url: '' });
@@ -131,7 +122,13 @@ const Home = () => {
       const { projects } = userSnap.data();
       const promises: Promise<Project>[] = projects.map(async (project: DocumentReference<Project>) => {
         const doc = await getDoc(project);
-        return doc.data();
+        const data = doc.data();
+        // TODO withConverterでの型定義が課題
+        return {
+          id: doc.id,
+          name: data?.name,
+          url: data?.url,
+        };
       });
       setMonitoringProjects(await Promise.all(promises));
     })();
