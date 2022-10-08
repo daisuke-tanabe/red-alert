@@ -21,7 +21,7 @@ import { AuthContext } from '../../../lib/AuthProvider';
 import AddIconButton from '../../atoms/AddIconButton/AddIconButton';
 import ProjectCard from '../../molecules/ProjectCard/ProjectCard';
 import Header from '../../organisms/Header/Header';
-import ProjectAdditionDialog from '../../organisms/ProjectAdditionDialog/ProjectAdditionDialog';
+import ProjectEntryDialog from '../../organisms/ProjectEntryDialog/ProjectEntryDialog';
 
 type Project = {
   id: string;
@@ -36,6 +36,8 @@ type AlgoliaHit = {
   url: string;
   isChecked: boolean;
 };
+// TODO 型が他ファイルと重複している
+type CheckedSearchResult = string[];
 
 const Home = () => {
   // user が null なら PrivateRoute でリダイレクトでここには到達しない
@@ -64,12 +66,9 @@ const Home = () => {
     setMonitoringProjects(monitoringProjects.filter(({ id: _id }) => _id !== id));
   };
 
-  const handleClickAddButton = async (searchResult: AlgoliaHit[]) => {
-    const checkedSearchResult = searchResult.filter(({ isChecked }) => isChecked);
-    const mappedCheckedResult = checkedSearchResult.map(({ objectID }) => objectID);
-
+  const registerMonitoringProjects = async (checkedSearchResult: CheckedSearchResult) => {
     // projectsコレクションへのリファレンスをとってユーザーにリファレンスを追加する
-    const querySnapshot = await getDocs(query(projectsColRef, where(documentId(), 'in', mappedCheckedResult)));
+    const querySnapshot = await getDocs(query(projectsColRef, where(documentId(), 'in', checkedSearchResult)));
     await Promise.all(
       querySnapshot.docs.map(async (doc) => {
         const data = doc.data();
@@ -84,10 +83,9 @@ const Home = () => {
         setMonitoringProjects((prevState) => [...prevState, newProject]);
       }),
     );
-    toggleDialog();
   };
 
-  const handleClickSaveButton = async () => {
+  const registerProjects = async () => {
     // TODO nameが重複しないようにチェックしたほうがいいかも(セキュリティルールいき？)
     // projectsコレクションにランダムIDを付与したproject(新規登録プロジェクト)を作成する
     const projectDocRef = await addDoc(projectsColRef, {
@@ -97,19 +95,16 @@ const Home = () => {
     // 自身を対象にしたuserへのリファレンス、projectを参照型でuserが格納
     await updateDoc(userDocRef, {
       projects: arrayUnion(projectDocRef),
+    }).then(() => {
+      setMonitoringProjects([
+        ...monitoringProjects,
+        {
+          id: projectDocRef.id,
+          name: projectEntry.name,
+          url: projectEntry.url,
+        },
+      ]);
     });
-    setMonitoringProjects([
-      ...monitoringProjects,
-      {
-        id: projectDocRef.id,
-        name: projectEntry.name,
-        url: projectEntry.url,
-      },
-    ]);
-
-    // TODO 成功したらstateの変更をするようにする
-    setProjectEntry({ name: '', url: '' });
-    toggleDialog();
   };
 
   useEffect(() => {
@@ -161,13 +156,13 @@ const Home = () => {
         </Container>
       </Box>
 
-      <ProjectAdditionDialog
+      <ProjectEntryDialog
         isShow={isShowDialog}
         toggleDialog={toggleDialog}
         monitoringProjects={monitoringProjects}
         setProjectEntry={setProjectEntry}
-        handleClickSaveButton={handleClickSaveButton}
-        handleClickAddButton={handleClickAddButton}
+        registerProjects={registerProjects}
+        registerMonitoringProjects={registerMonitoringProjects}
       />
     </>
   );
