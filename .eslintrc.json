@@ -27,7 +27,7 @@
       }
     ],
     "import/order": [
-      "error",
+      "warn",
       {
         "groups": ["builtin", "external", "internal", "unknown", "parent", "sibling", "index", "object", "type"],
         "pathGroups": [
