@@ -33,8 +33,8 @@ const ProjectCard = (props: ProjectCardProps) => {
           component="div"
           sx={{
             display: '-webkit-box',
-            '-webkit-box-orient': 'vertical',
-            '-webkit-line-clamp': '3',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: '3',
             overflow: 'hidden',
           }}
         >
