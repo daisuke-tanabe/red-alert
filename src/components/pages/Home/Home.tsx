@@ -8,7 +8,6 @@ import {
   doc,
   getDocs,
   getDoc,
-  setDoc,
   updateDoc,
   arrayUnion,
   query,
@@ -48,15 +47,15 @@ const Home = () => {
   // projectsコレクションのリファレンス
   const projectsColRef = collection(db, 'projects');
 
-  // 監視プロジェクト
+  // 監視中のプロジェクト
   const [monitoringProjects, setMonitoringProjects] = useState<MonitoringProjects>([]);
 
-  const [isDialogActive, setIsDialogActive] = useState(false);
+  const [isShowDialog, setIsShowDialog] = useState(false);
 
-  // 登録するプロジェクトの状態
-  const [project, setProject] = useState({ id: '', name: '', url: '' });
+  // 登録するプロジェクト
+  const [projectEntry, setProjectEntry] = useState({ name: '', url: '' });
 
-  const toggleDialog = () => setIsDialogActive(!isDialogActive);
+  const toggleDialog = () => setIsShowDialog((prevState) => !prevState);
 
   const ejectProject = async (id: string) => {
     const projectsDocRef = doc(db, 'projects', id);
@@ -65,9 +64,9 @@ const Home = () => {
     setMonitoringProjects(monitoringProjects.filter(({ id: _id }) => _id !== id));
   };
 
-  const handleClickAddButton = async (result: AlgoliaHit[]) => {
-    const filteredCheckedResult = result.filter(({ isChecked }) => isChecked);
-    const mappedCheckedResult = filteredCheckedResult.map(({ objectID }) => objectID);
+  const handleClickAddButton = async (searchResult: AlgoliaHit[]) => {
+    const checkedSearchResult = searchResult.filter(({ isChecked }) => isChecked);
+    const mappedCheckedResult = checkedSearchResult.map(({ objectID }) => objectID);
 
     // projectsコレクションへのリファレンスをとってユーザーにリファレンスを追加する
     const querySnapshot = await getDocs(query(projectsColRef, where(documentId(), 'in', mappedCheckedResult)));
@@ -82,18 +81,18 @@ const Home = () => {
           name: data.name,
           url: data.url,
         };
-        setMonitoringProjects([...monitoringProjects, newProject]);
+        setMonitoringProjects((prevState) => [...prevState, newProject]);
       }),
     );
-    setIsDialogActive(false);
+    toggleDialog();
   };
 
   const handleClickSaveButton = async () => {
     // TODO nameが重複しないようにチェックしたほうがいいかも(セキュリティルールいき？)
     // projectsコレクションにランダムIDを付与したproject(新規登録プロジェクト)を作成する
     const projectDocRef = await addDoc(projectsColRef, {
-      name: project.name,
-      url: project.url,
+      name: projectEntry.name,
+      url: projectEntry.url,
     });
     // 自身を対象にしたuserへのリファレンス、projectを参照型でuserが格納
     await updateDoc(userDocRef, {
@@ -103,14 +102,14 @@ const Home = () => {
       ...monitoringProjects,
       {
         id: projectDocRef.id,
-        name: project.name,
-        url: project.url,
+        name: projectEntry.name,
+        url: projectEntry.url,
       },
     ]);
 
     // TODO 成功したらstateの変更をするようにする
-    setProject({ id: '', name: '', url: '' });
-    setIsDialogActive(false);
+    setProjectEntry({ name: '', url: '' });
+    toggleDialog();
   };
 
   useEffect(() => {
@@ -163,10 +162,10 @@ const Home = () => {
       </Box>
 
       <ProjectAdditionDialog
-        isOpen={isDialogActive}
-        project={project}
-        setProject={setProject}
-        handleClickDialogToggleButton={toggleDialog}
+        isShow={isShowDialog}
+        toggleDialog={toggleDialog}
+        monitoringProjects={monitoringProjects}
+        setProjectEntry={setProjectEntry}
         handleClickSaveButton={handleClickSaveButton}
         handleClickAddButton={handleClickAddButton}
       />

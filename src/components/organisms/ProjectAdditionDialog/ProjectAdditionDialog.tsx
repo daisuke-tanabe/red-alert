@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Hit } from '@algolia/client-search';
+import React, { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   Button,
@@ -27,12 +26,13 @@ type Project = {
   name: string;
   url: string;
 };
-
 type ProjectAdditionDialogBaseProps = {
-  isOpen: boolean;
-  project: Project;
-  setProject: any;
-  handleClickDialogToggleButton: () => void;
+  isShow: boolean;
+  toggleDialog: () => void;
+  // TODO 型はあとで直す
+  monitoringProjects: Project[];
+  // TODO 型はあとで直す
+  setProjectEntry: any;
   handleClickSaveButton: () => Promise<void>;
   handleClickAddButton: (result: AlgoliaHit[]) => Promise<void>;
 };
@@ -51,61 +51,65 @@ const client = algoliaSearch('ETOZN4CMEK', '03909355275b69f35c9e9e969936e7ae');
 const index = client.initIndex('test_firestore');
 
 const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
-  const { isOpen, project, setProject, handleClickDialogToggleButton, handleClickSaveButton, handleClickAddButton } =
+  const { isShow, toggleDialog, monitoringProjects, setProjectEntry, handleClickSaveButton, handleClickAddButton } =
     props;
-  const [mode, setMode] = useState<'search' | 'register'>('search');
+  const [tab, setTab] = useState<'search' | 'register'>('search');
+  const [form, setForm] = useState({ name: '', url: '', keyword: '' });
   const [searchResult, setSearchResult] = useState<AlgoliaHit[]>([]);
 
-  const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleClickTab = (value: 'search' | 'register') => setTab(value);
+  const handleChangeInputField = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
-    setProject({
-      ...project,
+    setForm((prevState) => ({
+      ...prevState,
       [id]: value,
-    });
+    }));
   };
 
-  const handleClickSearchSwitchButton = () => {
-    setMode('search');
-  };
+  // setProjectEntryを依存に含めろという警告は正しくない
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => setProjectEntry({ name: form.name, url: form.url }), [form.name, form.url]);
 
-  const handleClickRegisterSwitchButton = () => {
-    setMode('register');
-  };
+  useEffect(() => {
+    if (form.keyword === '') {
+      setSearchResult([]);
+      return;
+    }
+
+    (async () => {
+      await index
+        .search<AlgoliaHit>(form.keyword, {
+          attributesToRetrieve: ['name', 'url'],
+        })
+        .then((result) => {
+          const filteredResult = result.hits.filter((hit) => {
+            // hit.objectIDとproject.idが一致したら結果を返却して、表示から除外するので否定するようにする
+            return !monitoringProjects.some((project) => hit.objectID === project.id);
+          });
+          const newHits = filteredResult.map((hit) => ({
+            ...hit,
+            isChecked: false,
+          }));
+          setSearchResult(newHits);
+        });
+    })();
+    // monitoringProjectsを依存に含めろという警告は正しくない
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.keyword]);
 
   const handleClickListButton = (id: string) => {
     const newSearchResult = searchResult.map((result) => {
       return result.objectID !== id ? result : { ...result, isChecked: !result.isChecked };
     });
-    console.log(newSearchResult);
     setSearchResult(newSearchResult);
   };
 
-  const handleChangeSearchKeyword = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === '') {
-      setSearchResult([]);
-      return;
-    }
-
-    // Search the index and print the results
-    await index
-      .search<AlgoliaHit>(event.target.value, {
-        attributesToRetrieve: ['objectID', 'name', 'url'],
-      })
-      .then((result) => {
-        const newHits = result.hits.map((hit) => ({
-          ...hit,
-          isChecked: false,
-        }));
-        setSearchResult(newHits);
-      });
-  };
-
   return (
-    <Dialog fullWidth maxWidth="sm" open={isOpen} onClose={handleClickDialogToggleButton} fullScreen>
+    <Dialog fullWidth maxWidth="sm" open={isShow} onClose={toggleDialog} fullScreen>
       <Stack sx={{ flex: 1 }}>
         <Grid container>
           <Grid xs={1.5} sx={{ alignSelf: 'center', justifyContent: 'center' }} container>
-            <IconButton sx={{ width: 44, height: 44 }} onClick={handleClickDialogToggleButton}>
+            <IconButton sx={{ width: 44, height: 44 }} onClick={toggleDialog}>
               <CloseIcon fontSize="medium" />
             </IconButton>
           </Grid>
@@ -116,14 +120,14 @@ const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
               sx={{ alignItems: 'center' }}
             >
               <DialogTitle component="div" sx={{ pl: 0, pr: 1.5, py: 2.9005, fontSize: '1rem' }}>
-                プロジェクトを{mode === 'register' ? '登録' : '検索'}する
+                プロジェクトを{tab === 'register' ? '登録' : '検索'}する
               </DialogTitle>
-              {mode === 'search' ? (
-                <Button variant="text" onClick={handleClickRegisterSwitchButton}>
+              {tab === 'search' ? (
+                <Button variant="text" onClick={() => handleClickTab('register')}>
                   登録
                 </Button>
               ) : (
-                <Button variant="text" onClick={handleClickSearchSwitchButton}>
+                <Button variant="text" onClick={() => handleClickTab('search')}>
                   検索
                 </Button>
               )}
@@ -135,7 +139,7 @@ const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
             <Grid container>
               <Grid xs={1.5} />
               <Grid xs={9}>
-                {mode === 'register' ? (
+                {tab === 'register' ? (
                   <>
                     <DialogContentText sx={{ mb: 4 }}>
                       新規登録するプロジェクトの名前とURLを入力してください。
@@ -154,7 +158,8 @@ const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
                         borderRadius: 1,
                         mb: 3,
                       }}
-                      onChange={handleChangeInput}
+                      onChange={handleChangeInputField}
+                      value={form.name}
                     />
                     <InputBase
                       autoComplete="off"
@@ -169,7 +174,8 @@ const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
                         border: '1px solid rgba(0, 0, 0, 0.23)',
                         borderRadius: 1,
                       }}
-                      onChange={handleChangeInput}
+                      onChange={handleChangeInputField}
+                      value={form.url}
                     />
                   </>
                 ) : (
@@ -177,7 +183,7 @@ const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
                     <DialogContentText sx={{ mb: 4 }}>登録済みのプロジェクトから追加します。</DialogContentText>
                     <InputBase
                       autoComplete="off"
-                      id="search"
+                      id="keyword"
                       placeholder="プロジェクトを検索"
                       type="text"
                       fullWidth
@@ -188,7 +194,8 @@ const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
                         border: '1px solid rgba(0, 0, 0, 0.23)',
                         borderRadius: 1,
                       }}
-                      onChange={handleChangeSearchKeyword}
+                      onChange={handleChangeInputField}
+                      value={form.keyword}
                     />
                     <List>
                       {searchResult.map((search) => {
@@ -222,7 +229,7 @@ const ProjectAdditionDialog = (props: ProjectAdditionDialogBaseProps) => {
           <Grid xs={1.5} />
           <Grid xs={10.5}>
             <DialogActions sx={{ px: 0, py: 2.2195, justifyContent: 'start' }}>
-              {mode === 'register' ? (
+              {tab === 'register' ? (
                 <Button variant="outlined" onClick={handleClickSaveButton}>
                   保存する
                 </Button>
