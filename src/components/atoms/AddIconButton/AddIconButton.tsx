@@ -7,7 +7,7 @@ type Props = {
   handleClick: () => void;
 };
 
-const AddButton = (props: Props) => {
+const AddIconButton = (props: Props) => {
   const { handleClick } = props;
   const theme = useTheme();
 
@@ -28,4 +28,4 @@ const AddButton = (props: Props) => {
   );
 };
 
-export default AddButton;
+export default AddIconButton;

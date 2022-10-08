@@ -18,7 +18,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../../firebase.config';
 import { AuthContext } from '../../../lib/AuthProvider';
-import AddButton from '../../atoms/AddButton/AddButton';
+import AddIconButton from '../../atoms/AddIconButton/AddIconButton';
 import ProjectCard from '../../molecules/ProjectCard/ProjectCard';
 import Header from '../../organisms/Header/Header';
 import ProjectAdditionDialog from '../../organisms/ProjectAdditionDialog/ProjectAdditionDialog';
@@ -145,7 +145,7 @@ const Home = () => {
                 プロジェクトを監視
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <AddButton handleClick={toggleDialog} />
+                <AddIconButton handleClick={toggleDialog} />
               </Box>
             </Grid>
 
