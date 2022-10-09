@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Divider,
   IconButton,
   List,
   Stack,
@@ -18,7 +17,6 @@ import {
   ListItemButton,
   Typography,
 } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import algoliaSearch from 'algoliasearch';
 import theme from '../../../theme';
 import BaseTextField from '../../atoms/TextField/BaseTextField';
@@ -64,6 +62,7 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
   const [algoliaResult, setAlgoliaResult] = useState<AlgoliaHitsResult>([]);
   const [checkedSearchResult, setCheckedSearchResult] = useState<ProjectsCheckedSearchResult>([]);
   const [searchResult, setSearchResult] = useState<ProjectsSearchResult>([]);
+  const [hasCheckedSearchResult, setHasCheckedSearchResult] = useState(false);
 
   const handleClickTab = (value: 'search' | 'registration') => setTab(value);
   const handleChangeInputField = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,7 +99,6 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
         // 失敗した時の仕様は後で考える
       });
   };
-
   const handleClickResult = (objectID: string, name: string) => {
     setCheckedSearchResult((prevState) => {
       if (prevState.some((state) => state.objectID === objectID)) {
@@ -116,7 +114,6 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
   // setProjectEntryを依存に含めろという警告は正しくない
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => setProjectEntry({ name: form.name, url: form.url }), [form.name, form.url]);
-
   useEffect(() => {
     if (form.keyword === '') {
       setAlgoliaResult([]);
@@ -133,7 +130,6 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
         });
     })();
   }, [form.keyword]);
-
   useEffect(() => {
     const excludeMonitoringProjects = algoliaResult.filter((result) => {
       // hit.objectIDとproject.idが一致したら結果を返却して、表示から除外するので否定するようにする
@@ -146,6 +142,11 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
     }));
     setSearchResult(mappedAlgoliaResult);
   }, [algoliaResult, checkedSearchResult, monitoringProjects]);
+  useEffect(() => {
+    setHasCheckedSearchResult(checkedSearchResult.length > 0);
+    // checkedSearchResult.lengthを依存に含めろという警告は正しくない
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchResult]);
 
   return (
     <Dialog
@@ -235,7 +236,7 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
         )}
       </DialogContent>
       <DialogActions sx={{ px: 3, py: 0, alignItems: 'start', flexDirection: 'column' }}>
-        {tab === 'search' && checkedSearchResult.length > 0 ? (
+        {tab === 'search' && hasCheckedSearchResult ? (
           <Stack direction="row" sx={{ mt: 2, mb: -0.5, width: '100%' }}>
             <Typography
               sx={{
@@ -256,16 +257,11 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
         <Button
           sx={{ my: 3, px: 4, py: 2, fontWeight: 'bold' }}
           variant="contained"
+          disabled={tab === 'search' ? !hasCheckedSearchResult : form.name === '' || form.url === ''}
           disableElevation
           onClick={tab === 'search' ? handleClickApplyMonitoring : handleClickSaveProjects}
         >
-          {tab === 'search'
-            ? `${
-                checkedSearchResult.length > 0
-                  ? `${checkedSearchResult.length}件のプロジェクトを追加`
-                  : 'プロジェクトを追加'
-              }`
-            : 'プロジェクトを保存'}
+          {tab === 'search' ? 'プロジェクトを追加' : 'プロジェクトを保存'}
         </Button>
       </DialogActions>
     </Dialog>
