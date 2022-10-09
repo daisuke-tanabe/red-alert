@@ -109,6 +109,10 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
       return [...prevState, { objectID, name }];
     });
   };
+  const handleClickResetState = () => {
+    setForm({ name: '', url: '', keyword: '' });
+    setCheckedSearchResult([]);
+  };
 
   // 登録フォームの結果を親の状態に渡す
   // setProjectEntryを依存に含めろという警告は正しくない
@@ -235,7 +239,7 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
           </Stack>
         )}
       </DialogContent>
-      <DialogActions sx={{ px: 3, py: 0, alignItems: 'start', flexDirection: 'column' }}>
+      <DialogActions sx={{ px: 3, py: 0, alignItems: 'start', flexDirection: 'column' }} disableSpacing>
         {tab === 'search' && hasCheckedSearchResult ? (
           <Stack direction="row" sx={{ mt: 2, mb: -0.5, width: '100%' }}>
             <Typography
@@ -254,15 +258,20 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
             </Typography>
           </Stack>
         ) : null}
-        <Button
-          sx={{ my: 3, px: 4, py: 2, fontWeight: 'bold' }}
-          variant="contained"
-          disabled={tab === 'search' ? !hasCheckedSearchResult : form.name === '' || form.url === ''}
-          disableElevation
-          onClick={tab === 'search' ? handleClickApplyMonitoring : handleClickSaveProjects}
-        >
-          {tab === 'search' ? 'プロジェクトを追加' : 'プロジェクトを保存'}
-        </Button>
+        <Stack direction="row">
+          <Button
+            sx={{ my: 3, px: 4, py: 2, fontWeight: 'bold' }}
+            variant="contained"
+            disabled={tab === 'search' ? !hasCheckedSearchResult : form.name === '' || form.url === ''}
+            disableElevation
+            onClick={tab === 'search' ? handleClickApplyMonitoring : handleClickSaveProjects}
+          >
+            {tab === 'search' ? 'プロジェクトを追加' : 'プロジェクトを保存'}
+          </Button>
+          <Button sx={{ my: 3, ml: 3, px: 4, py: 2, fontWeight: 'bold' }} onClick={handleClickResetState}>
+            すべてクリア
+          </Button>
+        </Stack>
       </DialogActions>
     </Dialog>
   );
