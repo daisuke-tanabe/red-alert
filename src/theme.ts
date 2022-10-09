@@ -23,6 +23,15 @@ declare module '@mui/material/Typography' {
 
 // https://mui.com/material-ui/customization/default-theme/#main-content
 const theme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 960,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
   palette: {
     common: {
       black: '#222',

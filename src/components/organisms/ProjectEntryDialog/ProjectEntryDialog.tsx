@@ -16,6 +16,7 @@ import {
   Checkbox,
   ListItemIcon,
   ListItemButton,
+  Typography,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import algoliaSearch from 'algoliasearch';
@@ -147,123 +148,126 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
   }, [algoliaResult, checkedSearchResult, monitoringProjects]);
 
   return (
-    <Dialog fullWidth maxWidth="sm" open={isShow} onClose={toggleDialog} fullScreen>
-      <Stack sx={{ flex: 1 }}>
-        <Grid container>
-          <Grid xs={1.5} sx={{ alignSelf: 'center', justifyContent: 'center' }} container>
-            <IconButton sx={{ width: 44, height: 44 }} onClick={toggleDialog}>
-              <CloseIcon fontSize="medium" />
-            </IconButton>
-          </Grid>
-          <Grid xs={10.5}>
-            <Stack
-              direction="row"
-              divider={<Divider orientation="vertical" flexItem sx={{ my: 3, mx: 1.5 }} />}
-              sx={{ alignItems: 'center' }}
-            >
-              <DialogTitle component="div" sx={{ pl: 0, pr: 1.5, py: 2.9005, fontSize: '1rem' }}>
-                プロジェクトを{tab === 'registration' ? '登録' : '検索'}する
-              </DialogTitle>
-              {tab === 'search' ? (
-                <Button variant="text" onClick={() => handleClickTab('registration')}>
-                  登録
-                </Button>
-              ) : (
-                <Button variant="text" onClick={() => handleClickTab('search')}>
-                  検索
-                </Button>
-              )}
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={isShow}
+      onClose={toggleDialog}
+      scroll="paper"
+      PaperProps={{
+        elevation: 0,
+        sx: { m: 0, maxHeight: '100%', borderRadius: 0 },
+      }}
+    >
+      <DialogTitle component="div" sx={{ p: 2 }}>
+        <Stack direction="row" sx={{ alignItems: 'center' }} spacing={1}>
+          <IconButton sx={{ width: 44, height: 44 }} onClick={toggleDialog}>
+            <CloseIcon fontSize="medium" />
+          </IconButton>
+          <Typography fontWeight="bold" fontSize="1.125rem">
+            プロジェクトを{tab === 'registration' ? '登録' : '検索'}する
+          </Typography>
+          <Button
+            variant="text"
+            sx={{ fontWeight: 'bold' }}
+            onClick={() => handleClickTab(tab === 'search' ? 'registration' : 'search')}
+          >
+            {tab === 'search' ? '登録' : '検索'}
+          </Button>
+        </Stack>
+      </DialogTitle>
+      <DialogContent sx={{ px: 3, py: 4, height: '100vh' }} dividers>
+        {tab === 'search' ? (
+          <>
+            <Stack spacing={3}>
+              <DialogContentText fontSize="0.875rem">登録済みのプロジェクトから追加します。</DialogContentText>
+              <BaseTextField
+                autoComplete="off"
+                id="keyword"
+                placeholder="プロジェクトを検索"
+                onChange={handleChangeInputField}
+                value={form.keyword}
+              />
             </Stack>
-          </Grid>
-        </Grid>
-        <Grid sx={{ flex: 1 }}>
-          <DialogContent sx={{ pt: 5, px: 0, pb: 6, height: 'calc(100vh - 144px)', overflowY: 'scroll' }} dividers>
-            <Grid container>
-              <Grid xs={1.5} />
-              <Grid xs={9}>
-                {tab === 'search' ? (
-                  <>
-                    <Stack spacing={4}>
-                      <DialogContentText>登録済みのプロジェクトから追加します。</DialogContentText>
-                      <BaseTextField
-                        autoComplete="off"
-                        id="keyword"
-                        placeholder="プロジェクトを検索"
-                        onChange={handleChangeInputField}
-                        value={form.keyword}
-                      />
-                    </Stack>
-                    <List>
-                      {searchResult.map((search) => {
-                        const { name, objectID, isChecked } = search;
-                        return (
-                          <ListItem key={objectID} disablePadding>
-                            <ListItemButton onClick={() => handleClickResult(objectID, name)}>
-                              <ListItemIcon>
-                                <Checkbox
-                                  edge="start"
-                                  checked={isChecked}
-                                  tabIndex={-1}
-                                  disableRipple
-                                  inputProps={{ 'aria-labelledby': objectID }}
-                                />
-                              </ListItemIcon>
-                              <ListItemText id={objectID} primary={name} />
-                            </ListItemButton>
-                          </ListItem>
-                        );
-                      })}
-                    </List>
-                  </>
-                ) : (
-                  <Stack spacing={4}>
-                    <DialogContentText>新規登録するプロジェクトの名前とURLを入力してください。</DialogContentText>
-                    <BaseTextField
-                      autoComplete="off"
-                      id="name"
-                      placeholder="プロジェクトの名前"
-                      onChange={handleChangeInputField}
-                      value={form.name}
-                    />
-                    <BaseTextField
-                      autoComplete="off"
-                      id="url"
-                      placeholder="プロジェクトのURL"
-                      onChange={handleChangeInputField}
-                      value={form.url}
-                    />
-                  </Stack>
-                )}
-              </Grid>
-              <Grid xs={1.5} />
-            </Grid>
-          </DialogContent>
-        </Grid>
-        <Grid container sx={{ py: 2 }}>
-          <Grid xs={1.5} />
-          <Grid xs={10.5}>
-            {checkedSearchResult.length > 0 ? (
-              <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', mb: 2 }}>
-                <div css={{ fontSize: '0.9375rem', fontWeight: 'bold', color: theme.palette.grey[500] }}>
-                  ［選択中］
-                </div>
-                <div css={{ fontSize: '0.9375rem' }}>{checkedSearchResult.map(({ name }) => name).join('、')}</div>
-              </Stack>
-            ) : null}
-            <DialogActions sx={{ p: 0, justifyContent: 'start' }}>
-              {tab === 'search' ? (
-                <Button size="large" variant="outlined" onClick={handleClickApplyMonitoring}>
-                  適用する
-                </Button>
-              ) : (
-                <Button variant="outlined" onClick={handleClickSaveProjects}>
-                  保存する
-                </Button>
-              )}
-            </DialogActions>
-          </Grid>
-        </Grid>
-      </Stack>
+            <List>
+              {searchResult.map((search) => {
+                const { name, objectID, isChecked } = search;
+                return (
+                  <ListItem key={objectID} disablePadding disableGutters dense>
+                    <ListItemButton onClick={() => handleClickResult(objectID, name)} dense>
+                      <ListItemIcon sx={{ minWidth: 38 }}>
+                        <Checkbox
+                          size="small"
+                          edge="start"
+                          checked={isChecked}
+                          tabIndex={-1}
+                          disableRipple
+                          inputProps={{ 'aria-labelledby': objectID }}
+                        />
+                      </ListItemIcon>
+                      <ListItemText id={objectID} primary={name} primaryTypographyProps={{ fontSize: '0.875rem' }} />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </>
+        ) : (
+          <Stack spacing={3}>
+            <DialogContentText fontSize="0.875rem">
+              新規登録するプロジェクトの名前とURLを入力してください。
+            </DialogContentText>
+            <BaseTextField
+              autoComplete="off"
+              id="name"
+              placeholder="プロジェクトの名前"
+              onChange={handleChangeInputField}
+              value={form.name}
+            />
+            <BaseTextField
+              autoComplete="off"
+              id="url"
+              placeholder="プロジェクトのURL"
+              onChange={handleChangeInputField}
+              value={form.url}
+            />
+          </Stack>
+        )}
+      </DialogContent>
+      <DialogActions sx={{ px: 3, py: 0, alignItems: 'start', flexDirection: 'column' }}>
+        {tab === 'search' && checkedSearchResult.length > 0 ? (
+          <Stack direction="row" sx={{ mt: 2, mb: -0.5, width: '100%' }}>
+            <Typography
+              sx={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <Typography component="span" color={theme.palette.grey[500]} fontSize="0.875rem" fontWeight="bold">
+                ［選択中］
+              </Typography>
+              <Typography component="span" fontSize="0.875rem">
+                {checkedSearchResult.map(({ name }) => name).join('、')}
+              </Typography>
+            </Typography>
+          </Stack>
+        ) : null}
+        <Button
+          sx={{ my: 3, px: 4, py: 2, fontWeight: 'bold' }}
+          variant="contained"
+          disableElevation
+          onClick={tab === 'search' ? handleClickApplyMonitoring : handleClickSaveProjects}
+        >
+          {tab === 'search'
+            ? `${
+                checkedSearchResult.length > 0
+                  ? `${checkedSearchResult.length}件のプロジェクトを追加`
+                  : 'プロジェクトを追加'
+              }`
+            : 'プロジェクトを保存'}
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };
