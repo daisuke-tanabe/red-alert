@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import algoliaSearch from 'algoliasearch';
+import theme from '../../../theme';
 import BaseTextField from '../../atoms/TextField/BaseTextField';
 
 // TODO 他コンポーネントと重複している
@@ -238,28 +239,28 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
             </Grid>
           </DialogContent>
         </Grid>
-        <Grid container>
+        <Grid container sx={{ py: 2 }}>
           <Grid xs={1.5} />
           <Grid xs={10.5}>
-            <Stack direction="row">
-              <DialogActions sx={{ px: 0, py: 2.2195, justifyContent: 'start' }}>
-                {tab === 'search' ? (
-                  <Button variant="outlined" onClick={handleClickApplyMonitoring}>
-                    適用する
-                  </Button>
-                ) : (
-                  <Button variant="outlined" onClick={handleClickSaveProjects}>
-                    保存する
-                  </Button>
-                )}
-              </DialogActions>
-
-              <div>
-                {checkedSearchResult.map((result) => {
-                  return <div key={result.objectID}>{result.name}</div>;
-                })}
-              </div>
-            </Stack>
+            {checkedSearchResult.length > 0 ? (
+              <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', mb: 2 }}>
+                <div css={{ fontSize: '0.9375rem', fontWeight: 'bold', color: theme.palette.grey[500] }}>
+                  ［選択中］
+                </div>
+                <div css={{ fontSize: '0.9375rem' }}>{checkedSearchResult.map(({ name }) => name).join('、')}</div>
+              </Stack>
+            ) : null}
+            <DialogActions sx={{ p: 0, justifyContent: 'start' }}>
+              {tab === 'search' ? (
+                <Button size="large" variant="outlined" onClick={handleClickApplyMonitoring}>
+                  適用する
+                </Button>
+              ) : (
+                <Button variant="outlined" onClick={handleClickSaveProjects}>
+                  保存する
+                </Button>
+              )}
+            </DialogActions>
           </Grid>
         </Grid>
       </Stack>
