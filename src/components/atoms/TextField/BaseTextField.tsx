@@ -19,7 +19,7 @@ const BaseTextField = ({ autoComplete, id, placeholder, value, onChange }: BaseT
       fullWidth
       sx={{
         px: 1.5,
-        py: 1,
+        py: 1.25,
         fontSize: '0.875rem',
         border: '1px solid rgba(0, 0, 0, 0.23)',
         borderRadius: 1,

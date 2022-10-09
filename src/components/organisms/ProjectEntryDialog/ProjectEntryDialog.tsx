@@ -198,8 +198,8 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
               {searchResult.map((search) => {
                 const { name, objectID, isChecked } = search;
                 return (
-                  <ListItem key={objectID} disablePadding disableGutters dense>
-                    <ListItemButton onClick={() => handleClickResult(objectID, name)} dense>
+                  <ListItem key={objectID} disablePadding disableGutters>
+                    <ListItemButton sx={{ py: 1.25, px: 2 }} onClick={() => handleClickResult(objectID, name)} dense>
                       <ListItemIcon sx={{ minWidth: 38 }}>
                         <Checkbox
                           size="small"
