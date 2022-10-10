@@ -9,21 +9,17 @@ import { AuthContext } from '../../../lib/AuthProvider';
 import TextField from '../../atoms/TextField';
 import FullLayout from '../../templates/FullLayout/FullLayout';
 
-type State = {
-  email: string;
-  password: string;
-};
-
 const Login = () => {
   const { user, signIn, auth } = useContext(AuthContext);
+  const [form, setForm] = useState({ email: '', 'current-password': '' });
   const [isShowPassword, setIsShowPassword] = useState(false);
-  const [values, setValues] = useState<State>({
-    email: '',
-    password: '',
-  });
 
-  const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const handleChangeInputField = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
+    setForm((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
   };
 
   const handleClickShowPassword = () => {
@@ -37,8 +33,7 @@ const Login = () => {
       console.log(user);
       return;
     }
-    console.log(`signIn: ${values.email}:${values.password}`);
-    await signIn({ auth, email: values.email, password: values.password });
+    await signIn({ auth, email: form.email, password: form['current-password'] });
   };
 
   return (
@@ -68,8 +63,8 @@ const Login = () => {
                     id="email"
                     label="Email"
                     type="email"
-                    value={values.email}
-                    onChange={handleChange('email')}
+                    value={form.email}
+                    onChange={handleChangeInputField}
                     fullWidth
                   />
                   <TextField
@@ -77,8 +72,8 @@ const Login = () => {
                     id="current-password"
                     label="Password"
                     type={isShowPassword ? 'text' : 'password'}
-                    value={values.password}
-                    onChange={handleChange('password')}
+                    value={form['current-password']}
+                    onChange={handleChangeInputField}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
