@@ -10,13 +10,13 @@ import {
   InputLabel,
   OutlinedInput,
   Stack,
-  TextField,
   Toolbar,
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import { AuthContext } from '../../../lib/AuthProvider';
+import TextField from '../../atoms/TextField';
 
 type State = {
   email: string;

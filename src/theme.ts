@@ -67,6 +67,9 @@ const theme = createTheme({
       'Meiryo',
       'sans-serif',
     ].join(','),
+    body1: {
+      fontSize: '0.875rem',
+    },
     siteName: {
       color: '#fff',
       fontSize: '1.25rem',

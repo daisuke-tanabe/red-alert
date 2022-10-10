@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import algoliaSearch from 'algoliasearch';
 import theme from '../../../theme';
-import BaseTextField from '../../atoms/TextField/BaseTextField';
+import TextField from '../../atoms/TextField';
 
 // TODO 他コンポーネントと重複している
 type Project = {
@@ -186,9 +186,10 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
           <>
             <Stack spacing={3}>
               <DialogContentText fontSize="0.875rem">登録済みのプロジェクトから追加します。</DialogContentText>
-              <BaseTextField
+              <TextField
                 autoComplete="off"
                 id="keyword"
+                type="text"
                 placeholder="プロジェクトを検索"
                 onChange={handleChangeInputField}
                 value={form.keyword}
@@ -222,14 +223,14 @@ const ProjectEntryDialog = (props: ProjectAdditionDialogBaseProps) => {
             <DialogContentText fontSize="0.875rem">
               新規登録するプロジェクトの名前とURLを入力してください。
             </DialogContentText>
-            <BaseTextField
+            <TextField
               autoComplete="off"
               id="name"
               placeholder="プロジェクトの名前"
               onChange={handleChangeInputField}
               value={form.name}
             />
-            <BaseTextField
+            <TextField
               autoComplete="off"
               id="url"
               placeholder="プロジェクトのURL"
