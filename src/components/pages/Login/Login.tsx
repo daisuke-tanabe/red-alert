@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Container, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack } from '@mui/material';
+import { Container, IconButton, InputAdornment, Stack } from '@mui/material';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import { AuthContext } from '../../../lib/AuthProvider';
@@ -63,29 +63,33 @@ const Login = () => {
             <Paper css={{ padding: '48px 36px' }}>
               <form onSubmit={handleSubmit}>
                 <Stack spacing={4}>
-                  <TextField id="email" label="Email" value={values.email} onChange={handleChange('email')} fullWidth />
-                  <FormControl variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                    <OutlinedInput
-                      autoComplete="new-password"
-                      id="new-password"
-                      type={isShowPassword ? 'text' : 'password'}
-                      value={values.password}
-                      onChange={handleChange('password')}
-                      endAdornment={
+                  <TextField
+                    autoComplete="email"
+                    id="email"
+                    label="Email"
+                    type="email"
+                    value={values.email}
+                    onChange={handleChange('email')}
+                    fullWidth
+                  />
+                  <TextField
+                    autoComplete="current-password"
+                    id="current-password"
+                    label="Password"
+                    type={isShowPassword ? 'text' : 'password'}
+                    value={values.password}
+                    onChange={handleChange('password')}
+                    InputProps={{
+                      endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            edge="end"
-                          >
+                          <IconButton onClick={handleClickShowPassword} edge="end">
                             {isShowPassword ? <VisibilityOff /> : <Visibility />}
                           </IconButton>
                         </InputAdornment>
-                      }
-                      label="Password"
-                    />
-                  </FormControl>
+                      ),
+                    }}
+                    fullWidth
+                  />
                   <Button
                     type="submit"
                     variant="contained"

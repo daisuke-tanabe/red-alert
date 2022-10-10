@@ -23,6 +23,18 @@ declare module '@mui/material/Typography' {
 
 // https://mui.com/material-ui/customization/default-theme/#main-content
 const theme = createTheme({
+  components: {
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          '&:-webkit-autofill': {
+            boxShadow: '0 0 0px 999px white inset', // 自動補完で背景色が変わることを防ぐ
+            // transition: 'background-color 10000s ease-in-out 0s'
+          },
+        },
+      },
+    },
+  },
   breakpoints: {
     values: {
       xs: 0,
