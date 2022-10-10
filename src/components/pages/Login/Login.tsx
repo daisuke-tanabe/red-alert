@@ -9,6 +9,51 @@ import { AuthContext } from '../../../lib/AuthProvider';
 import TextField from '../../atoms/TextField';
 import FullLayout from '../../templates/FullLayout/FullLayout';
 
+type EmailInputFieldProps = {
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+};
+const EmailInputField = (props: EmailInputFieldProps) => (
+  <TextField
+    autoComplete="email"
+    id="email"
+    label="Email"
+    type="email"
+    value={props.value}
+    onChange={props.onChange}
+    fullWidth
+  />
+);
+
+type CurrentPasswordInputFieldProps = {
+  value: string;
+  isShowPassword: boolean;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onClickTogglePassword: () => void;
+};
+const CurrentPasswordInputField = (props: CurrentPasswordInputFieldProps) => {
+  return (
+    <TextField
+      autoComplete="current-password"
+      id="current-password"
+      label="Password"
+      type={props.isShowPassword ? 'text' : 'password'}
+      value={props.value}
+      onChange={props.onChange}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton onClick={props.onClickTogglePassword} edge="end">
+              {props.isShowPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+      fullWidth
+    />
+  );
+};
+
 const Login = () => {
   const { user, signIn, auth } = useContext(AuthContext);
   const [form, setForm] = useState({ email: '', 'current-password': '' });
@@ -22,9 +67,7 @@ const Login = () => {
     }));
   };
 
-  const handleClickShowPassword = () => {
-    setIsShowPassword(!isShowPassword);
-  };
+  const handleClickShowPassword = () => setIsShowPassword((prevState) => !prevState);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -58,32 +101,12 @@ const Login = () => {
             <Paper css={{ padding: '48px 36px' }}>
               <form onSubmit={handleSubmit}>
                 <Stack spacing={4}>
-                  <TextField
-                    autoComplete="email"
-                    id="email"
-                    label="Email"
-                    type="email"
-                    value={form.email}
-                    onChange={handleChangeInputField}
-                    fullWidth
-                  />
-                  <TextField
-                    autoComplete="current-password"
-                    id="current-password"
-                    label="Password"
-                    type={isShowPassword ? 'text' : 'password'}
+                  <EmailInputField value={form.email} onChange={handleChangeInputField} />
+                  <CurrentPasswordInputField
+                    isShowPassword={isShowPassword}
                     value={form['current-password']}
                     onChange={handleChangeInputField}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton onClick={handleClickShowPassword} edge="end">
-                            {isShowPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                    fullWidth
+                    onClickTogglePassword={handleClickShowPassword}
                   />
                   <Button
                     type="submit"
