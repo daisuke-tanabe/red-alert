@@ -90,17 +90,37 @@ const Login = () => {
   });
   const validationRules = {
     email: {
-      required: 'メールアドレスを入力してください',
+      required: 'メールアドレスを入力してください。',
       pattern: {
         value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
         message: '入力形式がメールアドレスではありません。',
       },
     },
+    password: {
+      required: 'パスワードを入力してください。',
+      minLength: {
+        value: 8,
+        message: '8文字以上24文字以内で入力してください。',
+      },
+      maxLength: {
+        value: 24,
+        message: '8文字以上24文字以内で入力してください。',
+      },
+      pattern: {
+        value: /^(?=.*[A-Z])(?=.*[0-9])(?=.*[.?/-])[A-Za-z0-9.?]$/,
+        message: '大文字と数字と記号を少なくとも1つ含んだ英数字を入力してください。',
+      },
+    },
   };
-  const onSubmit: SubmitHandler<FormInput> = (data) => console.log('onSubmit:', data);
-  register('email', {
-    onChange: (event) => console.log(event.target.value),
-  });
+  const onSubmit: SubmitHandler<FormInput> = async (data) => {
+    console.log('onSubmit:', data);
+    if (user) {
+      // userが存在する場合はどうするか
+      console.log(user);
+      return;
+    }
+    await signIn({ auth, email: data.email, password: data.password });
+  };
 
   return (
     <>
@@ -130,13 +150,41 @@ const Login = () => {
                     rules={validationRules.email}
                     render={({ field, fieldState }) => (
                       <TextField
-                        {...field}
                         autoComplete="email"
                         label="Email"
                         type="text"
                         fullWidth
                         error={fieldState.invalid}
                         helperText={fieldState.error?.message}
+                        onChange={field.onChange}
+                        value={field.value}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="password"
+                    control={control}
+                    rules={validationRules.password}
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        autoComplete="current-password"
+                        id="current-password"
+                        label="Password"
+                        type={isShowPassword ? 'text' : 'password'}
+                        fullWidth
+                        error={fieldState.invalid}
+                        helperText={fieldState.error?.message}
+                        onChange={field.onChange}
+                        value={field.value}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={handleClickShowPassword} edge="end">
+                                {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
                       />
                     )}
                   />
