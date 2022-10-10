@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Navigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -54,6 +55,11 @@ const CurrentPasswordInputField = (props: CurrentPasswordInputFieldProps) => {
   );
 };
 
+type FormInput = {
+  email: string;
+  password: string;
+};
+
 const Login = () => {
   const { user, signIn, auth } = useContext(AuthContext);
   const [form, setForm] = useState({ email: '', 'current-password': '' });
@@ -69,7 +75,7 @@ const Login = () => {
 
   const handleClickShowPassword = () => setIsShowPassword((prevState) => !prevState);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitForm = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (user) {
       // userが存在する場合はどうするか
@@ -78,6 +84,23 @@ const Login = () => {
     }
     await signIn({ auth, email: form.email, password: form['current-password'] });
   };
+
+  const { register, handleSubmit, control } = useForm<FormInput>({
+    defaultValues: { email: '', password: '' },
+  });
+  const validationRules = {
+    email: {
+      required: 'メールアドレスを入力してください',
+      pattern: {
+        value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+        message: '入力形式がメールアドレスではありません。',
+      },
+    },
+  };
+  const onSubmit: SubmitHandler<FormInput> = (data) => console.log('onSubmit:', data);
+  register('email', {
+    onChange: (event) => console.log(event.target.value),
+  });
 
   return (
     <>
@@ -99,14 +122,23 @@ const Login = () => {
               <div css={{ color: 'white', fontSize: '36px', fontWeight: 'bold' }}>Red Alert</div>
             </div>
             <Paper css={{ padding: '48px 36px' }}>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <Stack spacing={4}>
-                  <EmailInputField value={form.email} onChange={handleChangeInputField} />
-                  <CurrentPasswordInputField
-                    isShowPassword={isShowPassword}
-                    value={form['current-password']}
-                    onChange={handleChangeInputField}
-                    onClickTogglePassword={handleClickShowPassword}
+                  <Controller
+                    name="email"
+                    control={control}
+                    rules={validationRules.email}
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        autoComplete="email"
+                        label="Email"
+                        type="text"
+                        fullWidth
+                        error={fieldState.invalid}
+                        helperText={fieldState.error?.message}
+                      />
+                    )}
                   />
                   <Button
                     type="submit"
@@ -121,6 +153,29 @@ const Login = () => {
                   </Button>
                 </Stack>
               </form>
+
+              {/*<form onSubmit={handleSubmitForm}>*/}
+              {/*  <Stack spacing={4}>*/}
+              {/*    <EmailInputField value={form.email} onChange={handleChangeInputField} />*/}
+              {/*    <CurrentPasswordInputField*/}
+              {/*      isShowPassword={isShowPassword}*/}
+              {/*      value={form['current-password']}*/}
+              {/*      onChange={handleChangeInputField}*/}
+              {/*      onClickTogglePassword={handleClickShowPassword}*/}
+              {/*    />*/}
+              {/*    <Button*/}
+              {/*      type="submit"*/}
+              {/*      variant="contained"*/}
+              {/*      css={{*/}
+              {/*        background: '#bd1333',*/}
+              {/*        height: '54px',*/}
+              {/*        fontWeight: 'bold',*/}
+              {/*      }}*/}
+              {/*    >*/}
+              {/*      Login*/}
+              {/*    </Button>*/}
+              {/*  </Stack>*/}
+              {/*</form>*/}
             </Paper>
           </Container>
         </FullLayout>
